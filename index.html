@@ -7,16 +7,18 @@
   <style>
     :root {
       color-scheme: dark;
-      --bg: #07121f;
-      --panel: #101d2e;
-      --panel-2: #16283d;
-      --line: #2c4664;
-      --text: #e8f3ff;
-      --muted: #9bb2c9;
-      --accent: #54d6ff;
+      --bg: #050914;
+      --panel: #0e1828;
+      --panel-2: #152238;
+      --panel-3: #1c3150;
+      --line: #304b70;
+      --text: #ecf6ff;
+      --muted: #a8bad0;
+      --accent: #4dd6ff;
       --gold: #ffd166;
       --danger: #ff5d73;
       --good: #8aff9b;
+      --violet: #b99cff;
     }
 
     * { box-sizing: border-box; }
@@ -25,30 +27,33 @@
       margin: 0;
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
-      background: radial-gradient(circle at 20% 10%, #18395a 0, transparent 28%), var(--bg);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(77, 214, 255, 0.18), transparent 24%),
+        radial-gradient(circle at 82% 18%, rgba(255, 209, 102, 0.13), transparent 22%),
+        linear-gradient(180deg, #07111f 0%, var(--bg) 100%);
       color: var(--text);
       overflow-x: hidden;
     }
 
     .app {
-      width: min(1180px, calc(100vw - 24px));
+      width: min(1560px, calc(100vw - 24px));
       margin: 0 auto;
-      padding: 18px 0 24px;
+      padding: 16px 0 20px;
     }
 
     header {
       display: flex;
-      align-items: center;
+      align-items: end;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(28px, 4vw, 52px);
+      font-size: clamp(32px, 4vw, 58px);
       letter-spacing: 0;
-      line-height: 1;
+      line-height: 0.95;
     }
 
     .subtitle {
@@ -59,56 +64,57 @@
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(320px, 820px) minmax(260px, 1fr);
+      grid-template-columns: minmax(680px, 1fr) 330px;
       gap: 14px;
       align-items: start;
     }
 
-    .game-wrap,
+    .game-panel,
     .side-panel,
     .modal-content {
       border: 1px solid var(--line);
-      background: rgba(16, 29, 46, 0.92);
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.25);
+      background: rgba(14, 24, 40, 0.93);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
     }
 
-    .game-wrap {
-      padding: 10px;
+    .game-panel {
       border-radius: 8px;
+      padding: 10px;
+    }
+
+    .canvas-shell {
+      position: relative;
+      overflow: hidden;
+      border-radius: 7px;
+      border: 1px solid rgba(77, 214, 255, 0.2);
     }
 
     canvas {
       width: 100%;
-      max-width: 800px;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 5 / 3;
       display: block;
-      border-radius: 6px;
-      background: #081522;
+      background: #07111f;
       cursor: crosshair;
     }
 
-    .side-panel {
-      border-radius: 8px;
-      padding: 14px;
-    }
-
-    .stats {
+    .mission-bar {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(5, minmax(110px, 1fr));
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .stat {
-      padding: 10px;
+      min-height: 58px;
+      padding: 9px 10px;
       border: 1px solid var(--line);
       border-radius: 6px;
-      background: var(--panel-2);
+      background: linear-gradient(180deg, var(--panel-2), #101c2d);
     }
 
     .stat b {
       display: block;
-      font-size: 19px;
+      font-size: 22px;
       margin-top: 2px;
     }
 
@@ -118,37 +124,54 @@
       text-transform: uppercase;
     }
 
-    .tower-list {
-      display: grid;
-      gap: 8px;
-      margin: 12px 0;
+    .side-panel {
+      border-radius: 8px;
+      padding: 12px;
     }
 
-    button,
-    textarea,
-    input {
-      font: inherit;
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-bottom: 10px;
     }
 
     button {
       border: 1px solid var(--line);
-      background: #1b3550;
+      background: #17304d;
       color: var(--text);
       border-radius: 6px;
       padding: 10px 12px;
       cursor: pointer;
       transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+      font: inherit;
     }
 
     button:hover { transform: translateY(-1px); border-color: var(--accent); }
     button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    button.active { border-color: var(--accent); background: #214a70; }
 
-    .tower-btn {
+    .panel-view { display: none; }
+    .panel-view.active { display: block; }
+
+    .tower-list,
+    .enemy-list {
       display: grid;
-      grid-template-columns: 34px 1fr auto;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .tower-btn,
+    .enemy-card {
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
       gap: 10px;
       align-items: center;
       text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel-2);
+      padding: 9px;
     }
 
     .tower-btn.selected {
@@ -156,9 +179,9 @@
       background: #214669;
     }
 
-    .tower-icon {
-      width: 30px;
-      height: 30px;
+    .icon {
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       display: grid;
       place-items: center;
@@ -168,24 +191,61 @@
 
     .laser { background: var(--accent); }
     .pulse { background: var(--gold); }
-    .slow { background: #b79cff; }
+    .slow { background: var(--violet); }
+    .scout { background: #ff7b8f; }
+    .raider { background: #ffb86b; }
+    .bulwark { background: #91ffce; }
+
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .info-card {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #091626;
+      padding: 11px;
+      min-height: 132px;
+      margin: 10px 0;
+    }
+
+    .info-card h3 {
+      margin: 0 0 6px;
+      font-size: 17px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 9px;
+    }
+
+    .mini-stat {
+      border: 1px solid rgba(48, 75, 112, 0.75);
+      border-radius: 5px;
+      padding: 7px;
+      background: rgba(21, 34, 56, 0.8);
+    }
 
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin: 12px 0;
+      margin: 10px 0;
     }
 
     .wide { grid-column: 1 / -1; }
 
     .log {
-      height: 138px;
+      height: 142px;
       overflow: auto;
       border: 1px solid var(--line);
       border-radius: 6px;
       padding: 10px;
-      background: #0b1726;
+      background: #081322;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.35;
@@ -212,33 +272,21 @@
       padding: 18px;
     }
 
-    .modal-content h2 { margin: 0 0 8px; }
-    .modal-content p { color: var(--muted); line-height: 1.45; }
+    .modal-content h2 { margin: 0 0 10px; }
+    .modal-content p, .modal-content li { color: var(--muted); line-height: 1.45; }
 
-    textarea,
-    input {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: #07121f;
-      color: var(--text);
-      padding: 10px;
-      margin: 6px 0 10px;
-    }
-
-    textarea { min-height: 120px; resize: vertical; }
-
-    .small {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    @media (max-width: 880px) {
-      header,
+    @media (max-width: 1040px) {
       .layout { grid-template-columns: 1fr; }
+      .mission-bar { grid-template-columns: repeat(2, 1fr); }
       header { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 620px) {
+      .app { width: min(100vw - 12px, 1560px); }
+      .mission-bar { grid-template-columns: 1fr; }
       .actions { grid-template-columns: 1fr; }
+      .layout { gap: 10px; }
+      canvas { min-height: 430px; }
     }
   </style>
 </head>
@@ -247,34 +295,50 @@
     <header>
       <div>
         <h1>Universal Defense</h1>
-        <div class="subtitle">Build orbital towers, stop the invasion, keep your progress.</div>
+        <div class="subtitle">Mission prototype: build orbital towers, test enemy waves, protect the core.</div>
       </div>
       <button id="updatesBtn">Update Log</button>
     </header>
 
     <main class="layout">
-      <section class="game-wrap">
-        <canvas id="game" width="800" height="600" aria-label="Universal Defense game board"></canvas>
+      <section class="game-panel">
+        <div class="mission-bar">
+          <div class="stat"><span class="label">Credits</span><b id="credits">0</b></div>
+          <div class="stat"><span class="label">Core</span><b id="lives">0</b></div>
+          <div class="stat"><span class="label">Wave</span><b id="wave">0</b></div>
+          <div class="stat"><span class="label">Incoming</span><b id="incoming">0</b></div>
+          <div class="stat"><span class="label">Destroyed</span><b id="destroyed">0</b></div>
+        </div>
+        <div class="canvas-shell">
+          <canvas id="game" width="1200" height="720" aria-label="Universal Defense game board"></canvas>
+        </div>
       </section>
 
       <aside class="side-panel">
-        <div class="stats">
-          <div class="stat"><span class="label">Credits</span><b id="credits">0</b></div>
-          <div class="stat"><span class="label">Lives</span><b id="lives">0</b></div>
-          <div class="stat"><span class="label">Wave</span><b id="wave">0</b></div>
-          <div class="stat"><span class="label">Best</span><b id="best">0</b></div>
+        <div class="tabs">
+          <button id="towersTab" class="active">Towers</button>
+          <button id="enemiesTab">Enemies</button>
         </div>
 
-        <div class="label">Towers</div>
-        <div class="tower-list" id="towerList"></div>
+        <section id="towersView" class="panel-view active">
+          <div class="label">Towers</div>
+          <div class="tower-list" id="towerList"></div>
+          <div class="info-card" id="towerInfo"></div>
+          <div class="actions">
+            <button id="startWave">Start Wave</button>
+            <button id="pauseBtn">Pause</button>
+            <button class="wide" id="resetBtn">Restart Mission</button>
+          </div>
+        </section>
 
-        <div class="actions">
-          <button id="startWave">Start Wave</button>
-          <button id="pauseBtn">Pause</button>
-          <button id="saveBtn">Save</button>
-          <button id="resetBtn">Reset Run</button>
-          <button class="wide" id="cloudBtn">GitHub Save / Load</button>
-        </div>
+        <section id="enemiesView" class="panel-view">
+          <div class="label">Enemy Database</div>
+          <div class="enemy-list" id="enemyList"></div>
+          <div class="info-card">
+            <h3>Mission Notes</h3>
+            <div class="small">Enemy stats scale each wave. Later we can replace these shapes with your custom enemy images and add special powers.</div>
+          </div>
+        </section>
 
         <div class="label">Captain's Console</div>
         <div class="log" id="consoleLog"></div>
@@ -285,31 +349,20 @@
   <div class="modal" id="updatesModal">
     <div class="modal-content">
       <h2>Update Log</h2>
+      <p><b>v0.2.0 - Mission Overhaul</b></p>
+      <ul>
+        <li>Expanded the battlefield from 800x600 to 1200x720 for longer paths and more tower space.</li>
+        <li>Added a larger winding mission path with more room for future enemy art.</li>
+        <li>Reworked the side panel into Towers and Enemies tabs.</li>
+        <li>Added tower hover/selection stat cards with damage, cooldown, range, cost, and role.</li>
+        <li>Added an enemy database with HP, speed, reward, and behavior notes.</li>
+        <li>Polished the space visuals, HUD, mission controls, placement preview, and combat readability.</li>
+        <li>Removed cloud-save clutter from the main game because this is now a mission-testing prototype.</li>
+      </ul>
       <p><b>v0.1.0 - First Launch</b></p>
-      <p>Added a playable space tower defense prototype, three tower types, waves, local autosave, export/import backup, optional GitHub cloud saving, and this in-game update log.</p>
-      <button data-close>Close</button>
-    </div>
-  </div>
-
-  <div class="modal" id="cloudModal">
-    <div class="modal-content">
-      <h2>GitHub Save / Load</h2>
-      <p>This keeps the game code secret-free. Paste a fine-grained GitHub token here only in your own browser. The game stores it locally, then saves progress to <b>saves/player-save.json</b> in this private repo.</p>
-      <label class="label" for="tokenInput">GitHub token</label>
-      <input id="tokenInput" type="password" placeholder="github_pat_..." autocomplete="off" />
-      <div class="actions">
-        <button id="rememberToken">Remember Token</button>
-        <button id="forgetToken">Forget Token</button>
-        <button id="cloudSave">Save to GitHub</button>
-        <button id="cloudLoad">Load from GitHub</button>
-      </div>
-      <p class="small">Token permissions: fine-grained token, this repository only, Contents: Read and Write. The token is never committed to the repo.</p>
-      <label class="label" for="exportBox">Export / Import Save</label>
-      <textarea id="exportBox" spellcheck="false"></textarea>
-      <div class="actions">
-        <button id="exportSave">Export Current Save</button>
-        <button id="importSave">Import Save Text</button>
-      </div>
+      <ul>
+        <li>Added the first playable prototype, three towers, waves, credits, lives, and an in-game update log.</li>
+      </ul>
       <button data-close>Close</button>
     </div>
   </div>
@@ -318,59 +371,63 @@
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
 
-    const SAVE_KEY = 'universalDefenseSaveV1';
-    const TOKEN_KEY = 'universalDefenseGithubToken';
-    const CLOUD = {
-      owner: 'ArchonLancelot',
-      repo: 'Universal-Defense',
-      branch: 'main',
-      path: 'saves/player-save.json'
+    const towerTypes = {
+      laser: {
+        name: 'Laser Node', cost: 70, range: 150, damage: 18, cooldown: 0.48,
+        color: '#4dd6ff', role: 'Reliable focus fire', note: 'Fast beam tower that picks off light ships.'
+      },
+      pulse: {
+        name: 'Pulse Cannon', cost: 125, range: 128, damage: 52, cooldown: 1.05,
+        color: '#ffd166', role: 'Heavy burst damage', note: 'Slow but powerful. Great against high HP targets.'
+      },
+      slow: {
+        name: 'Gravity Well', cost: 95, range: 138, damage: 6, cooldown: 0.38,
+        color: '#b99cff', role: 'Control and chip damage', note: 'Weak damage, but slows ships inside its range.', slow: 0.48
+      }
     };
 
-    const towerTypes = {
-      laser: { name: 'Laser Node', cost: 70, range: 118, damage: 18, rate: 520, color: '#54d6ff', note: 'Fast single-target shots.' },
-      pulse: { name: 'Pulse Cannon', cost: 115, range: 96, damage: 42, rate: 950, color: '#ffd166', note: 'Heavy burst damage.' },
-      slow: { name: 'Gravity Well', cost: 95, range: 105, damage: 7, rate: 420, color: '#b79cff', slow: 0.55, note: 'Slows enemies in range.' }
+    const enemyTypes = {
+      scout: {
+        name: 'Void Scout', icon: 'S', baseHp: 42, speed: 82, reward: 10,
+        color: '#ff5d73', note: 'Fast and fragile. Tests if your path coverage has gaps.'
+      },
+      raider: {
+        name: 'Ion Raider', icon: 'R', baseHp: 86, speed: 58, reward: 18,
+        color: '#ffb86b', note: 'Balanced attacker with enough hull to punish weak defenses.'
+      },
+      bulwark: {
+        name: 'Bulwark Carrier', icon: 'B', baseHp: 190, speed: 34, reward: 35,
+        color: '#91ffce', note: 'Slow, tough ship. Pulse Cannons are built for these.'
+      }
     };
 
     const path = [
-      { x: 0, y: 304 }, { x: 154, y: 304 }, { x: 154, y: 118 },
-      { x: 370, y: 118 }, { x: 370, y: 448 }, { x: 604, y: 448 },
-      { x: 604, y: 220 }, { x: 800, y: 220 }
+      { x: -20, y: 342 }, { x: 160, y: 342 }, { x: 160, y: 110 },
+      { x: 392, y: 110 }, { x: 392, y: 548 }, { x: 632, y: 548 },
+      { x: 632, y: 230 }, { x: 844, y: 230 }, { x: 844, y: 612 },
+      { x: 1055, y: 612 }, { x: 1055, y: 374 }, { x: 1220, y: 374 }
     ];
 
-    let selectedTower = 'laser';
-    let paused = false;
-    let lastTime = performance.now();
-    let spawnTimer = 0;
-    let enemiesToSpawn = 0;
-    let waveActive = false;
-    let messageTimer = 0;
-
     const state = {
-      credits: 180,
-      lives: 20,
+      credits: 260,
+      lives: 25,
       wave: 0,
-      bestWave: 0,
-      stardust: 0,
+      destroyed: 0,
+      selectedTower: 'laser',
+      hoverTower: null,
+      mouse: { x: -1000, y: -1000, inside: false },
       towers: [],
       enemies: [],
       shots: [],
-      log: ['Welcome, commander. Build towers, then start wave 1.']
+      log: ['Mission ready. Hover a tower to inspect it, then place defenses.']
     };
 
-    function resetRun() {
-      state.credits = 180;
-      state.lives = 20;
-      state.wave = 0;
-      state.towers = [];
-      state.enemies = [];
-      state.shots = [];
-      enemiesToSpawn = 0;
-      waveActive = false;
-      addLog('Run reset. Your best wave is still saved.');
-      saveLocal();
-    }
+    let paused = false;
+    let lastTime = performance.now();
+    let spawnTimer = 0;
+    let spawnQueue = [];
+    let waveActive = false;
+    let hudTimer = 0;
 
     function addLog(text) {
       state.log.unshift(text);
@@ -378,58 +435,33 @@
       document.getElementById('consoleLog').innerHTML = state.log.map(item => `<div>${item}</div>`).join('');
     }
 
-    function saveLocal() {
-      const save = getSaveData();
-      localStorage.setItem(SAVE_KEY, JSON.stringify(save));
-      updateHud();
-    }
-
-    function loadLocal() {
-      const raw = localStorage.getItem(SAVE_KEY);
-      if (!raw) return;
-      try {
-        applySaveData(JSON.parse(raw));
-        addLog('Local save loaded.');
-      } catch (error) {
-        addLog('Local save could not be loaded.');
-      }
-    }
-
-    function getSaveData() {
-      return {
-        version: 1,
-        savedAt: new Date().toISOString(),
-        credits: state.credits,
-        lives: state.lives,
-        wave: state.wave,
-        bestWave: state.bestWave,
-        stardust: state.stardust,
-        towers: state.towers,
-        log: state.log.slice(0, 8)
-      };
-    }
-
-    function applySaveData(save) {
-      state.credits = Number(save.credits) || 180;
-      state.lives = Number(save.lives) || 20;
-      state.wave = Number(save.wave) || 0;
-      state.bestWave = Number(save.bestWave) || 0;
-      state.stardust = Number(save.stardust) || 0;
-      state.towers = Array.isArray(save.towers) ? save.towers : [];
-      state.enemies = [];
-      state.shots = [];
-      state.log = Array.isArray(save.log) ? save.log : state.log;
-      enemiesToSpawn = 0;
-      waveActive = false;
-      saveLocal();
-    }
-
     function updateHud() {
       document.getElementById('credits').textContent = state.credits;
-      document.getElementById('lives').textContent = state.lives;
+      document.getElementById('lives').textContent = `${state.lives}%`;
       document.getElementById('wave').textContent = state.wave;
-      document.getElementById('best').textContent = state.bestWave;
+      document.getElementById('incoming').textContent = spawnQueue.length + state.enemies.length;
+      document.getElementById('destroyed').textContent = state.destroyed;
       document.getElementById('consoleLog').innerHTML = state.log.map(item => `<div>${item}</div>`).join('');
+    }
+
+    function towerStatRows(tower) {
+      return `
+        <div class="stat-grid">
+          <div class="mini-stat"><span class="label">Damage</span><b>${tower.damage}</b></div>
+          <div class="mini-stat"><span class="label">Cooldown</span><b>${tower.cooldown.toFixed(2)}s</b></div>
+          <div class="mini-stat"><span class="label">Range</span><b>${tower.range}</b></div>
+          <div class="mini-stat"><span class="label">Cost</span><b>${tower.cost}</b></div>
+        </div>
+      `;
+    }
+
+    function setTowerInfo(key) {
+      const tower = towerTypes[key];
+      document.getElementById('towerInfo').innerHTML = `
+        <h3>${tower.name}</h3>
+        <div class="small"><b>${tower.role}</b><br>${tower.note}</div>
+        ${towerStatRows(tower)}
+      `;
     }
 
     function buildTowerButtons() {
@@ -437,41 +469,108 @@
       list.innerHTML = '';
       Object.entries(towerTypes).forEach(([key, tower]) => {
         const button = document.createElement('button');
-        button.className = `tower-btn ${selectedTower === key ? 'selected' : ''}`;
+        button.className = `tower-btn ${state.selectedTower === key ? 'selected' : ''}`;
         button.innerHTML = `
-          <span class="tower-icon ${key}">${tower.name[0]}</span>
-          <span><b>${tower.name}</b><br><span class="small">${tower.note}</span></span>
+          <span class="icon ${key}">${tower.name[0]}</span>
+          <span><b>${tower.name}</b><br><span class="small">${tower.role}</span></span>
           <b>${tower.cost}</b>
         `;
+        button.addEventListener('mouseenter', () => {
+          state.hoverTower = key;
+          setTowerInfo(key);
+        });
+        button.addEventListener('mouseleave', () => {
+          state.hoverTower = null;
+          setTowerInfo(state.selectedTower);
+        });
         button.addEventListener('click', () => {
-          selectedTower = key;
+          state.selectedTower = key;
+          setTowerInfo(key);
           buildTowerButtons();
         });
         list.appendChild(button);
       });
+      setTowerInfo(state.selectedTower);
+    }
+
+    function buildEnemyList() {
+      const list = document.getElementById('enemyList');
+      list.innerHTML = '';
+      Object.values(enemyTypes).forEach(enemy => {
+        const card = document.createElement('div');
+        card.className = 'enemy-card';
+        card.innerHTML = `
+          <span class="icon" style="background:${enemy.color}">${enemy.icon}</span>
+          <span><b>${enemy.name}</b><br><span class="small">${enemy.note}</span></span>
+          <span class="small">HP ${enemy.baseHp}</span>
+          <div class="wide stat-grid">
+            <div class="mini-stat"><span class="label">Base HP</span><b>${enemy.baseHp}</b></div>
+            <div class="mini-stat"><span class="label">Speed</span><b>${enemy.speed}</b></div>
+            <div class="mini-stat"><span class="label">Reward</span><b>${enemy.reward}</b></div>
+            <div class="mini-stat"><span class="label">Type</span><b>${enemy.icon}</b></div>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function switchTab(tab) {
+      const towers = tab === 'towers';
+      document.getElementById('towersTab').classList.toggle('active', towers);
+      document.getElementById('enemiesTab').classList.toggle('active', !towers);
+      document.getElementById('towersView').classList.toggle('active', towers);
+      document.getElementById('enemiesView').classList.toggle('active', !towers);
+    }
+
+    function restartMission() {
+      state.credits = 260;
+      state.lives = 25;
+      state.wave = 0;
+      state.destroyed = 0;
+      state.towers = [];
+      state.enemies = [];
+      state.shots = [];
+      spawnQueue = [];
+      waveActive = false;
+      paused = false;
+      document.getElementById('pauseBtn').textContent = 'Pause';
+      addLog('Mission restarted. Build a fresh defense grid.');
+      updateHud();
+    }
+
+    function wavePattern(wave) {
+      const queue = [];
+      const scouts = 8 + wave * 3;
+      const raiders = Math.max(0, Math.floor((wave - 1) * 1.8));
+      const bulwarks = Math.max(0, Math.floor((wave - 3) / 2));
+      for (let i = 0; i < scouts; i++) queue.push('scout');
+      for (let i = 0; i < raiders; i++) queue.push('raider');
+      for (let i = 0; i < bulwarks; i++) queue.push('bulwark');
+      return queue.sort(() => Math.random() - 0.5);
     }
 
     function startWave() {
-      if (waveActive || enemiesToSpawn > 0) return;
+      if (waveActive || spawnQueue.length > 0) return;
       state.wave += 1;
-      state.bestWave = Math.max(state.bestWave, state.wave);
-      enemiesToSpawn = 8 + state.wave * 3;
+      spawnQueue = wavePattern(state.wave);
       spawnTimer = 0;
       waveActive = true;
-      addLog(`Wave ${state.wave} launched. Incoming ships: ${enemiesToSpawn}.`);
-      saveLocal();
+      addLog(`Wave ${state.wave} launched. Enemy contacts: ${spawnQueue.length}.`);
+      updateHud();
     }
 
-    function spawnEnemy() {
-      const hp = 55 + state.wave * 16;
+    function spawnEnemy(typeKey) {
+      const data = enemyTypes[typeKey];
+      const hp = Math.round(data.baseHp * (1 + state.wave * 0.18));
       state.enemies.push({
+        type: typeKey,
         x: path[0].x,
         y: path[0].y,
         segment: 0,
         hp,
         maxHp: hp,
-        speed: 42 + state.wave * 2,
-        reward: 12 + Math.floor(state.wave * 1.5),
+        speed: data.speed + state.wave * 1.6,
+        reward: data.reward + Math.floor(state.wave * 1.8),
         slowUntil: 0
       });
     }
@@ -484,46 +583,47 @@
         const t = Math.max(0, Math.min(1, ((x - a.x) * (b.x - a.x) + (y - a.y) * (b.y - a.y)) / lengthSquared));
         const px = a.x + t * (b.x - a.x);
         const py = a.y + t * (b.y - a.y);
-        if (Math.hypot(x - px, y - py) < 42) return true;
+        if (Math.hypot(x - px, y - py) < 50) return true;
       }
       return false;
+    }
+
+    function canPlaceTower(x, y) {
+      if (x < 28 || y < 28 || x > canvas.width - 28 || y > canvas.height - 28) return false;
+      if (isNearPath(x, y)) return false;
+      return !state.towers.some(existing => Math.hypot(existing.x - x, existing.y - y) < 46);
     }
 
     function placeTower(event) {
       const rect = canvas.getBoundingClientRect();
       const x = (event.clientX - rect.left) * (canvas.width / rect.width);
       const y = (event.clientY - rect.top) * (canvas.height / rect.height);
-      const tower = towerTypes[selectedTower];
+      const tower = towerTypes[state.selectedTower];
 
       if (state.credits < tower.cost) {
         addLog(`Need ${tower.cost} credits for ${tower.name}.`);
         return;
       }
-      if (isNearPath(x, y)) {
-        addLog('Towers need clear orbit space away from the enemy path.');
-        return;
-      }
-      if (state.towers.some(existing => Math.hypot(existing.x - x, existing.y - y) < 38)) {
-        addLog('That area already has a tower nearby.');
+      if (!canPlaceTower(x, y)) {
+        addLog('Placement blocked. Keep towers away from the path and other towers.');
         return;
       }
 
       state.credits -= tower.cost;
-      state.towers.push({ type: selectedTower, x, y, cooldown: 0, level: 1 });
+      state.towers.push({ type: state.selectedTower, x, y, cooldown: 0, level: 1 });
       addLog(`${tower.name} deployed.`);
-      saveLocal();
+      updateHud();
     }
 
     function update(delta) {
       if (paused) return;
       const now = performance.now();
 
-      if (enemiesToSpawn > 0) {
+      if (spawnQueue.length > 0) {
         spawnTimer -= delta;
         if (spawnTimer <= 0) {
-          spawnEnemy();
-          enemiesToSpawn -= 1;
-          spawnTimer = Math.max(360, 850 - state.wave * 16);
+          spawnEnemy(spawnQueue.shift());
+          spawnTimer = Math.max(330, 760 - state.wave * 20);
         }
       }
 
@@ -534,7 +634,7 @@
         const angle = Math.atan2(target.y - enemy.y, target.x - enemy.x);
         enemy.x += Math.cos(angle) * speed * delta / 1000;
         enemy.y += Math.sin(angle) * speed * delta / 1000;
-        if (Math.hypot(target.x - enemy.x, target.y - enemy.y) < 4) {
+        if (Math.hypot(target.x - enemy.x, target.y - enemy.y) < 5) {
           enemy.segment += 1;
           enemy.x = target.x;
           enemy.y = target.y;
@@ -545,24 +645,25 @@
         const enemy = state.enemies[i];
         if (enemy.segment >= path.length - 1) {
           state.enemies.splice(i, 1);
-          state.lives -= 1;
-          addLog('An enemy slipped through the defense line.');
+          state.lives -= enemy.type === 'bulwark' ? 4 : 2;
+          addLog(`${enemyTypes[enemy.type].name} hit the core.`);
           if (state.lives <= 0) {
-            addLog(`Base destroyed at wave ${state.wave}. Resetting run.`);
-            resetRun();
+            addLog(`Core lost on wave ${state.wave}. Restarting mission.`);
+            restartMission();
+            return;
           }
         }
       }
 
       state.towers.forEach(tower => {
         const data = towerTypes[tower.type];
-        tower.cooldown -= delta;
+        tower.cooldown -= delta / 1000;
         if (tower.cooldown > 0) return;
         const target = state.enemies.find(enemy => Math.hypot(enemy.x - tower.x, enemy.y - tower.y) <= data.range);
         if (!target) return;
         target.hp -= data.damage * tower.level;
         if (data.slow) target.slowUntil = now + 900;
-        tower.cooldown = data.rate;
+        tower.cooldown = data.cooldown;
         state.shots.push({ x1: tower.x, y1: tower.y, x2: target.x, y2: target.y, life: 120, color: data.color });
       });
 
@@ -570,7 +671,7 @@
         const enemy = state.enemies[i];
         if (enemy.hp <= 0) {
           state.credits += enemy.reward;
-          state.stardust += 1;
+          state.destroyed += 1;
           state.enemies.splice(i, 1);
         }
       }
@@ -578,43 +679,72 @@
       state.shots.forEach(shot => shot.life -= delta);
       state.shots = state.shots.filter(shot => shot.life > 0);
 
-      if (waveActive && enemiesToSpawn <= 0 && state.enemies.length === 0) {
+      if (waveActive && spawnQueue.length === 0 && state.enemies.length === 0) {
         waveActive = false;
-        const bonus = 35 + state.wave * 5;
+        const bonus = 45 + state.wave * 8;
         state.credits += bonus;
         addLog(`Wave ${state.wave} cleared. Bonus: ${bonus} credits.`);
-        saveLocal();
+        updateHud();
       }
 
-      messageTimer += delta;
-      if (messageTimer > 2500) {
+      hudTimer += delta;
+      if (hudTimer > 350) {
         updateHud();
-        messageTimer = 0;
+        hudTimer = 0;
       }
     }
 
     function drawStars() {
-      ctx.fillStyle = '#07121f';
+      ctx.fillStyle = '#07111f';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(255,255,255,0.6)';
-      for (let i = 0; i < 70; i++) {
-        const x = (i * 97) % canvas.width;
-        const y = (i * 53) % canvas.height;
-        ctx.fillRect(x, y, 1.5, 1.5);
+      for (let i = 0; i < 130; i++) {
+        const x = (i * 137 + 47) % canvas.width;
+        const y = (i * 71 + 29) % canvas.height;
+        const size = i % 9 === 0 ? 2 : 1;
+        ctx.fillStyle = i % 7 === 0 ? 'rgba(77,214,255,0.65)' : 'rgba(255,255,255,0.58)';
+        ctx.fillRect(x, y, size, size);
       }
+      ctx.fillStyle = 'rgba(255, 209, 102, 0.08)';
+      ctx.beginPath();
+      ctx.arc(1060, 112, 78, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     function drawPath() {
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.strokeStyle = '#233a55';
-      ctx.lineWidth = 54;
+      ctx.strokeStyle = '#1d334f';
+      ctx.lineWidth = 68;
       ctx.beginPath();
       path.forEach((point, index) => index ? ctx.lineTo(point.x, point.y) : ctx.moveTo(point.x, point.y));
       ctx.stroke();
-      ctx.strokeStyle = '#4d789d';
-      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#426b93';
+      ctx.lineWidth = 14;
       ctx.stroke();
+      ctx.setLineDash([18, 22]);
+      ctx.strokeStyle = 'rgba(77,214,255,0.35)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    function drawPlacementPreview() {
+      if (!state.mouse.inside) return;
+      const tower = towerTypes[state.selectedTower];
+      const valid = canPlaceTower(state.mouse.x, state.mouse.y) && state.credits >= tower.cost;
+      ctx.beginPath();
+      ctx.arc(state.mouse.x, state.mouse.y, tower.range, 0, Math.PI * 2);
+      ctx.fillStyle = valid ? `${tower.color}18` : 'rgba(255, 93, 115, 0.13)';
+      ctx.fill();
+      ctx.strokeStyle = valid ? `${tower.color}88` : 'rgba(255, 93, 115, 0.85)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(state.mouse.x, state.mouse.y, 19, 0, Math.PI * 2);
+      ctx.fillStyle = valid ? tower.color : '#ff5d73';
+      ctx.globalAlpha = 0.8;
+      ctx.fill();
+      ctx.globalAlpha = 1;
     }
 
     function drawTowers() {
@@ -622,38 +752,46 @@
         const data = towerTypes[tower.type];
         ctx.beginPath();
         ctx.arc(tower.x, tower.y, data.range, 0, Math.PI * 2);
-        ctx.fillStyle = `${data.color}10`;
+        ctx.fillStyle = `${data.color}0d`;
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(tower.x, tower.y, 18, 0, Math.PI * 2);
-        ctx.fillStyle = data.color;
+        ctx.arc(tower.x, tower.y, 21, 0, Math.PI * 2);
+        ctx.fillStyle = '#07111f';
         ctx.fill();
-        ctx.fillStyle = '#06101c';
-        ctx.font = 'bold 15px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(data.name[0], tower.x, tower.y + 1);
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = data.color;
+        ctx.stroke();
+        ctx.fillStyle = data.color;
+        ctx.beginPath();
+        ctx.arc(tower.x, tower.y, 8, 0, Math.PI * 2);
+        ctx.fill();
       });
     }
 
     function drawEnemies() {
       state.enemies.forEach(enemy => {
+        const data = enemyTypes[enemy.type];
+        const angle = enemy.segment < path.length - 1
+          ? Math.atan2(path[enemy.segment + 1].y - enemy.y, path[enemy.segment + 1].x - enemy.x)
+          : 0;
+        const size = enemy.type === 'bulwark' ? 24 : enemy.type === 'raider' ? 19 : 15;
         ctx.save();
         ctx.translate(enemy.x, enemy.y);
-        ctx.fillStyle = '#ff5d73';
+        ctx.rotate(angle);
+        ctx.fillStyle = data.color;
         ctx.beginPath();
-        ctx.moveTo(18, 0);
-        ctx.lineTo(-12, -12);
-        ctx.lineTo(-7, 0);
-        ctx.lineTo(-12, 12);
+        ctx.moveTo(size, 0);
+        ctx.lineTo(-size * 0.75, -size * 0.62);
+        ctx.lineTo(-size * 0.42, 0);
+        ctx.lineTo(-size * 0.75, size * 0.62);
         ctx.closePath();
         ctx.fill();
         ctx.restore();
 
-        ctx.fillStyle = '#2a0f18';
-        ctx.fillRect(enemy.x - 18, enemy.y - 24, 36, 5);
+        ctx.fillStyle = '#1e0c15';
+        ctx.fillRect(enemy.x - 22, enemy.y - 30, 44, 6);
         ctx.fillStyle = '#8aff9b';
-        ctx.fillRect(enemy.x - 18, enemy.y - 24, 36 * Math.max(0, enemy.hp / enemy.maxHp), 5);
+        ctx.fillRect(enemy.x - 22, enemy.y - 30, 44 * Math.max(0, enemy.hp / enemy.maxHp), 6);
       });
     }
 
@@ -661,7 +799,7 @@
       state.shots.forEach(shot => {
         ctx.strokeStyle = shot.color;
         ctx.globalAlpha = Math.max(0, shot.life / 120);
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 4;
         ctx.beginPath();
         ctx.moveTo(shot.x1, shot.y1);
         ctx.lineTo(shot.x2, shot.y2);
@@ -674,8 +812,8 @@
       if (!paused) return;
       ctx.fillStyle = 'rgba(0,0,0,0.42)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#e8f3ff';
-      ctx.font = 'bold 38px Arial';
+      ctx.fillStyle = '#ecf6ff';
+      ctx.font = 'bold 42px Arial';
       ctx.textAlign = 'center';
       ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
     }
@@ -683,6 +821,7 @@
     function draw() {
       drawStars();
       drawPath();
+      drawPlacementPreview();
       drawTowers();
       drawEnemies();
       drawShots();
@@ -700,59 +839,11 @@
     function openModal(id) { document.getElementById(id).classList.add('open'); }
     function closeModals() { document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('open')); }
 
-    function encodeBase64(text) {
-      return btoa(unescape(encodeURIComponent(text)));
-    }
-
-    function decodeBase64(text) {
-      return decodeURIComponent(escape(atob(text.replace(/\n/g, ''))));
-    }
-
-    async function githubRequest(url, options = {}) {
-      const token = localStorage.getItem(TOKEN_KEY) || document.getElementById('tokenInput').value.trim();
-      if (!token) throw new Error('Add a GitHub token first.');
-      const response = await fetch(url, {
-        ...options,
-        headers: {
-          Accept: 'application/vnd.github+json',
-          Authorization: `Bearer ${token}`,
-          'X-GitHub-Api-Version': '2022-11-28',
-          ...(options.headers || {})
-        }
-      });
-      if (!response.ok) {
-        const detail = await response.text();
-        throw new Error(`${response.status}: ${detail.slice(0, 120)}`);
-      }
-      return response.status === 204 ? null : response.json();
-    }
-
-    async function saveToGithub() {
-      const apiPath = `https://api.github.com/repos/${CLOUD.owner}/${CLOUD.repo}/contents/${CLOUD.path}`;
-      let sha;
-      try {
-        const existing = await githubRequest(`${apiPath}?ref=${CLOUD.branch}`);
-        sha = existing.sha;
-      } catch (error) {
-        if (!String(error.message).startsWith('404')) throw error;
-      }
-      const body = {
-        message: `Save Universal Defense progress (${new Date().toLocaleString()})`,
-        branch: CLOUD.branch,
-        content: encodeBase64(JSON.stringify(getSaveData(), null, 2)),
-        sha
-      };
-      await githubRequest(apiPath, { method: 'PUT', body: JSON.stringify(body) });
-      addLog('Cloud save uploaded to GitHub.');
-      saveLocal();
-    }
-
-    async function loadFromGithub() {
-      const apiPath = `https://api.github.com/repos/${CLOUD.owner}/${CLOUD.repo}/contents/${CLOUD.path}?ref=${CLOUD.branch}`;
-      const file = await githubRequest(apiPath);
-      const save = JSON.parse(decodeBase64(file.content));
-      applySaveData(save);
-      addLog('Cloud save loaded from GitHub.');
+    function updateMouse(event) {
+      const rect = canvas.getBoundingClientRect();
+      state.mouse.x = (event.clientX - rect.left) * (canvas.width / rect.width);
+      state.mouse.y = (event.clientY - rect.top) * (canvas.height / rect.height);
+      state.mouse.inside = true;
     }
 
     document.getElementById('startWave').addEventListener('click', startWave);
@@ -760,43 +851,21 @@
       paused = !paused;
       document.getElementById('pauseBtn').textContent = paused ? 'Resume' : 'Pause';
     });
-    document.getElementById('saveBtn').addEventListener('click', () => { saveLocal(); addLog('Local progress saved.'); });
-    document.getElementById('resetBtn').addEventListener('click', resetRun);
+    document.getElementById('resetBtn').addEventListener('click', restartMission);
     document.getElementById('updatesBtn').addEventListener('click', () => openModal('updatesModal'));
-    document.getElementById('cloudBtn').addEventListener('click', () => {
-      document.getElementById('tokenInput').value = localStorage.getItem(TOKEN_KEY) || '';
-      openModal('cloudModal');
-    });
+    document.getElementById('towersTab').addEventListener('click', () => switchTab('towers'));
+    document.getElementById('enemiesTab').addEventListener('click', () => switchTab('enemies'));
     document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', closeModals));
     document.querySelectorAll('.modal').forEach(modal => modal.addEventListener('click', event => {
       if (event.target === modal) closeModals();
     }));
-    document.getElementById('rememberToken').addEventListener('click', () => {
-      localStorage.setItem(TOKEN_KEY, document.getElementById('tokenInput').value.trim());
-      addLog('GitHub token remembered in this browser.');
-    });
-    document.getElementById('forgetToken').addEventListener('click', () => {
-      localStorage.removeItem(TOKEN_KEY);
-      document.getElementById('tokenInput').value = '';
-      addLog('GitHub token removed from this browser.');
-    });
-    document.getElementById('cloudSave').addEventListener('click', () => saveToGithub().catch(error => addLog(`Cloud save failed: ${error.message}`)));
-    document.getElementById('cloudLoad').addEventListener('click', () => loadFromGithub().catch(error => addLog(`Cloud load failed: ${error.message}`)));
-    document.getElementById('exportSave').addEventListener('click', () => {
-      document.getElementById('exportBox').value = encodeBase64(JSON.stringify(getSaveData()));
-    });
-    document.getElementById('importSave').addEventListener('click', () => {
-      try {
-        applySaveData(JSON.parse(decodeBase64(document.getElementById('exportBox').value.trim())));
-        addLog('Imported save text.');
-      } catch (error) {
-        addLog('Import failed. Check the save text.');
-      }
-    });
-
     canvas.addEventListener('click', placeTower);
+    canvas.addEventListener('mousemove', updateMouse);
+    canvas.addEventListener('mouseenter', updateMouse);
+    canvas.addEventListener('mouseleave', () => { state.mouse.inside = false; });
+
     buildTowerButtons();
-    loadLocal();
+    buildEnemyList();
     updateHud();
     requestAnimationFrame(loop);
   </script>
