@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.3 - Voidweaver Arrives
+
+- Removed all placeholder enemies from the game.
+- Added Voidweaver as the only active enemy type.
+- Voidweaver is now the basic first spider enemy: fast, light, and worth 12 cash.
+- Updated enemy waves so every spawn is currently Voidweaver.
+- Updated the enemy database to focus on spider class information.
+
 ## v0.2.2 - Tower Menu and Web Terrain
 
 - Fixed menu hover and tab switching so the page no longer nudges around.
