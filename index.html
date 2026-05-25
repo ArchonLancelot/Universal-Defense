@@ -28,10 +28,11 @@
       font-family: Arial, Helvetica, sans-serif;
       background:
         radial-gradient(circle at 12% 8%, rgba(77, 214, 255, 0.18), transparent 24%),
-        radial-gradient(circle at 82% 18%, rgba(255, 209, 102, 0.13), transparent 22%),
+        radial-gradient(circle at 82% 18%, rgba(185, 156, 255, 0.12), transparent 22%),
         linear-gradient(180deg, #07111f 0%, var(--bg) 100%);
       color: var(--text);
       overflow-x: hidden;
+      overflow-y: scroll;
     }
 
     .app {
@@ -97,7 +98,7 @@
     }
 
     canvas.building { cursor: crosshair; }
-    canvas.selling { cursor: pointer; }
+    canvas.inspecting { cursor: pointer; }
 
     .mission-bar {
       display: grid;
@@ -129,6 +130,7 @@
     .side-panel {
       border-radius: 8px;
       padding: 12px;
+      min-height: 650px;
     }
 
     .tabs {
@@ -145,13 +147,14 @@
       border-radius: 6px;
       padding: 10px 12px;
       cursor: pointer;
-      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+      transition: border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
       font: inherit;
     }
 
-    button:hover { transform: translateY(-1px); border-color: var(--accent); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    button:hover { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(77, 214, 255, 0.12) inset; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
     button.active { border-color: var(--accent); background: #214a70; }
+    button.danger { border-color: rgba(255, 93, 115, 0.55); background: #4a1f31; }
 
     .panel-view { display: none; }
     .panel-view.active { display: block; }
@@ -209,7 +212,7 @@
       border-radius: 6px;
       background: #091626;
       padding: 11px;
-      min-height: 132px;
+      min-height: 156px;
       margin: 10px 0;
     }
 
@@ -313,7 +316,7 @@
       <section class="game-panel">
         <div class="mission-bar">
           <div class="stat"><span class="label">Cash</span><b id="credits">0</b></div>
-          <div class="stat"><span class="label">Core</span><b id="lives">0</b></div>
+          <div class="stat"><span class="label">Core</span><b id="core">0</b></div>
           <div class="stat"><span class="label">Wave</span><b id="wave">0</b></div>
           <div class="stat"><span class="label">Incoming</span><b id="incoming">0</b></div>
           <div class="stat"><span class="label">Destroyed</span><b id="destroyed">0</b></div>
@@ -347,7 +350,7 @@
           <div class="enemy-list" id="enemyList"></div>
           <div class="info-card">
             <h3>Mission Notes</h3>
-            <div class="small">Enemy stats scale each wave. Later we can replace these shapes with your custom enemy images and add special powers.</div>
+            <div class="small">Enemy stats scale each wave. Later we can replace these shapes with your custom space spider images and add special powers.</div>
           </div>
         </section>
 
@@ -360,15 +363,19 @@
   <div class="modal" id="updatesModal">
     <div class="modal-content">
       <h2>Update Log</h2>
+      <p><b>v0.2.2 - Tower Menu and Web Terrain</b></p>
+      <ul>
+        <li>Fixed menu hover and tab switching so the page no longer nudges around.</li>
+        <li>Core now starts at 100% instead of 25%.</li>
+        <li>Removed the yellow planet from the top right of the map.</li>
+        <li>Clicking a placed tower now opens a tower menu instead of selling instantly.</li>
+        <li>Added a manual Sell button in the tower menu. Towers still sell for half their placement cost.</li>
+        <li>Tower ranges now appear only while placing a tower or inspecting a placed tower.</li>
+        <li>Changed the buildable terrain into a silky space-web landscape for the future spider enemy theme.</li>
+      </ul>
       <p><b>v0.2.1 - Control and Polish Pass</b></p>
       <ul>
-        <li>After placing a tower, the cursor now clears instead of holding another tower.</li>
-        <li>Added tower selling: with an open cursor, click a tower to sell it for half its placement cost.</li>
-        <li>Added an Open Cursor button so you can manually cancel tower placement.</li>
-        <li>Added Auto Wave so the next wave can start by itself after a short delay.</li>
-        <li>Renamed enemy Reward to Cash and changed enemy Type letters into clear class names.</li>
-        <li>Added more spacing inside stat cards so labels and numbers are easier to read.</li>
-        <li>Improved battlefield graphics with a tactical grid, nebula glow, engine trails, stronger tower silhouettes, and brighter path effects.</li>
+        <li>Added open cursor, auto wave, tower selling, clearer enemy labels, and improved visual effects.</li>
       </ul>
       <p><b>v0.2.0 - Mission Overhaul</b></p>
       <ul>
@@ -425,10 +432,11 @@
 
     const state = {
       credits: 260,
-      lives: 25,
+      core: 100,
       wave: 0,
       destroyed: 0,
       selectedTower: null,
+      selectedPlacedTower: null,
       hoverTower: null,
       autoWave: false,
       autoWaveDelay: 0,
@@ -436,7 +444,7 @@
       towers: [],
       enemies: [],
       shots: [],
-      log: ['Mission ready. Choose a tower, place it, then your cursor opens again.']
+      log: ['Mission ready. Choose a tower to build, or click a placed tower to inspect it.']
     };
 
     let paused = false;
@@ -454,18 +462,18 @@
 
     function updateHud() {
       document.getElementById('credits').textContent = state.credits;
-      document.getElementById('lives').textContent = `${state.lives}%`;
+      document.getElementById('core').textContent = `${Math.max(0, state.core)}%`;
       document.getElementById('wave').textContent = state.wave;
       document.getElementById('incoming').textContent = spawnQueue.length + state.enemies.length;
       document.getElementById('destroyed').textContent = state.destroyed;
       document.getElementById('consoleLog').innerHTML = state.log.map(item => `<div>${item}</div>`).join('');
       document.getElementById('autoWaveBtn').textContent = state.autoWave ? 'Auto Wave: On' : 'Auto Wave: Off';
       canvas.classList.toggle('building', Boolean(state.selectedTower));
-      canvas.classList.toggle('selling', !state.selectedTower && state.mouse.inside && towerAt(state.mouse.x, state.mouse.y));
+      canvas.classList.toggle('inspecting', !state.selectedTower && state.mouse.inside && Boolean(towerAt(state.mouse.x, state.mouse.y)));
     }
 
     function towerAt(x, y) {
-      return state.towers.find(tower => Math.hypot(tower.x - x, tower.y - y) <= 26);
+      return state.towers.find(tower => Math.hypot(tower.x - x, tower.y - y) <= 28);
     }
 
     function towerStatRows(tower) {
@@ -484,7 +492,7 @@
       if (!key) {
         info.innerHTML = `
           <h3>Open Cursor</h3>
-          <div class="small">No tower is selected. Click a tower on the battlefield to sell it for half its cost, or choose a tower above to build one.</div>
+          <div class="small">No tower is selected. Click a placed tower to inspect it, open its upgrade panel, or sell it manually.</div>
         `;
         return;
       }
@@ -496,11 +504,28 @@
       `;
     }
 
+    function setPlacedTowerInfo(tower) {
+      const data = towerTypes[tower.type];
+      const refund = Math.floor(data.cost / 2);
+      const info = document.getElementById('towerInfo');
+      info.innerHTML = `
+        <h3>${data.name}</h3>
+        <div class="small"><b>Placed tower</b><br>Upgrade options will live here later. For now, this panel lets you inspect range and sell manually.</div>
+        ${towerStatRows(data)}
+        <div class="actions">
+          <button disabled>Upgrade Soon</button>
+          <button class="danger" id="sellTowerBtn">Sell: ${refund}</button>
+        </div>
+      `;
+      document.getElementById('sellTowerBtn').addEventListener('click', () => sellTower(tower));
+    }
+
     function clearCursor(message = true) {
       state.selectedTower = null;
+      state.selectedPlacedTower = null;
       buildTowerButtons();
       setTowerInfo(null);
-      if (message) addLog('Cursor opened. Click an existing tower to sell it.');
+      if (message) addLog('Cursor opened. Click a placed tower to inspect it.');
       updateHud();
     }
 
@@ -521,17 +546,18 @@
         });
         button.addEventListener('mouseleave', () => {
           state.hoverTower = null;
-          setTowerInfo(state.selectedTower);
+          if (state.selectedPlacedTower) setPlacedTowerInfo(state.selectedPlacedTower);
+          else setTowerInfo(state.selectedTower);
         });
         button.addEventListener('click', () => {
           state.selectedTower = key;
+          state.selectedPlacedTower = null;
           setTowerInfo(key);
           buildTowerButtons();
           updateHud();
         });
         list.appendChild(button);
       });
-      setTowerInfo(state.selectedTower);
     }
 
     function buildEnemyList() {
@@ -565,10 +591,11 @@
 
     function restartMission() {
       state.credits = 260;
-      state.lives = 25;
+      state.core = 100;
       state.wave = 0;
       state.destroyed = 0;
       state.selectedTower = null;
+      state.selectedPlacedTower = null;
       state.autoWaveDelay = 0;
       state.towers = [];
       state.enemies = [];
@@ -578,6 +605,7 @@
       paused = false;
       document.getElementById('pauseBtn').textContent = 'Pause';
       buildTowerButtons();
+      setTowerInfo(null);
       addLog('Mission restarted. Build a fresh defense grid.');
       updateHud();
     }
@@ -646,6 +674,8 @@
       const refund = Math.floor(data.cost / 2);
       state.towers.splice(index, 1);
       state.credits += refund;
+      state.selectedPlacedTower = null;
+      setTowerInfo(null);
       addLog(`${data.name} sold for ${refund} cash.`);
       updateHud();
     }
@@ -657,13 +687,16 @@
       const existingTower = towerAt(x, y);
 
       if (!state.selectedTower) {
-        if (existingTower) sellTower(existingTower);
+        state.selectedPlacedTower = existingTower || null;
+        if (existingTower) setPlacedTowerInfo(existingTower);
+        else setTowerInfo(null);
+        updateHud();
         return;
       }
 
       const tower = towerTypes[state.selectedTower];
       if (existingTower) {
-        addLog('That spot already has a tower. Open the cursor to sell it.');
+        addLog('That spot already has a tower. Open the cursor to inspect it.');
         return;
       }
       if (state.credits < tower.cost) {
@@ -717,9 +750,9 @@
         const enemy = state.enemies[i];
         if (enemy.segment >= path.length - 1) {
           state.enemies.splice(i, 1);
-          state.lives -= enemy.type === 'bulwark' ? 4 : 2;
+          state.core -= enemy.type === 'bulwark' ? 14 : enemy.type === 'raider' ? 9 : 6;
           addLog(`${enemyTypes[enemy.type].name} hit the core.`);
-          if (state.lives <= 0) {
+          if (state.core <= 0) {
             addLog(`Core lost on wave ${state.wave}. Restarting mission.`);
             restartMission();
             return;
@@ -769,44 +802,60 @@
 
     function drawStars() {
       const nebula = ctx.createRadialGradient(230, 135, 20, 230, 135, 420);
-      nebula.addColorStop(0, 'rgba(77, 214, 255, 0.18)');
-      nebula.addColorStop(0.45, 'rgba(98, 92, 255, 0.08)');
+      nebula.addColorStop(0, 'rgba(77, 214, 255, 0.17)');
+      nebula.addColorStop(0.45, 'rgba(185, 156, 255, 0.08)');
       nebula.addColorStop(1, 'rgba(5, 9, 20, 0)');
       ctx.fillStyle = '#07111f';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = nebula;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.strokeStyle = 'rgba(77, 214, 255, 0.05)';
-      ctx.lineWidth = 1;
-      for (let x = 0; x < canvas.width; x += 60) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-      for (let y = 0; y < canvas.height; y += 60) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
-
       for (let i = 0; i < 150; i++) {
         const x = (i * 137 + 47) % canvas.width;
         const y = (i * 71 + 29) % canvas.height;
         const size = i % 9 === 0 ? 2 : 1;
-        ctx.fillStyle = i % 7 === 0 ? 'rgba(77,214,255,0.68)' : 'rgba(255,255,255,0.6)';
+        ctx.fillStyle = i % 7 === 0 ? 'rgba(77,214,255,0.68)' : 'rgba(255,255,255,0.58)';
         ctx.fillRect(x, y, size, size);
       }
+    }
 
-      ctx.fillStyle = 'rgba(255, 209, 102, 0.09)';
-      ctx.beginPath();
-      ctx.arc(1060, 112, 78, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(255, 209, 102, 0.24)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
+    function drawWebTerrain() {
+      const anchors = [
+        { x: 56, y: 72 }, { x: 256, y: 38 }, { x: 520, y: 78 }, { x: 768, y: 44 }, { x: 1108, y: 92 },
+        { x: 88, y: 620 }, { x: 282, y: 518 }, { x: 512, y: 654 }, { x: 745, y: 548 }, { x: 1135, y: 650 },
+        { x: 258, y: 250 }, { x: 510, y: 338 }, { x: 735, y: 318 }, { x: 968, y: 464 }
+      ];
+
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = 'rgba(190, 230, 255, 0.11)';
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i < anchors.length; i++) {
+        for (let j = i + 1; j < anchors.length; j++) {
+          const a = anchors[i];
+          const b = anchors[j];
+          const distance = Math.hypot(a.x - b.x, a.y - b.y);
+          if (distance < 315) {
+            ctx.globalAlpha = Math.max(0.08, 0.34 - distance / 900);
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            const midX = (a.x + b.x) / 2 + Math.sin(i * 1.7 + j) * 18;
+            const midY = (a.y + b.y) / 2 + Math.cos(i + j * 1.3) * 14;
+            ctx.quadraticCurveTo(midX, midY, b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      ctx.globalAlpha = 1;
+      anchors.forEach((point, index) => {
+        const pulse = index % 3 === 0 ? 4 : 2.5;
+        ctx.fillStyle = 'rgba(221, 247, 255, 0.34)';
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, pulse, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.restore();
     }
 
     function drawPath() {
@@ -852,19 +901,24 @@
     function drawTowers() {
       state.towers.forEach(tower => {
         const data = towerTypes[tower.type];
-        const hovered = !state.selectedTower && towerAt(state.mouse.x, state.mouse.y) === tower;
-        ctx.beginPath();
-        ctx.arc(tower.x, tower.y, data.range, 0, Math.PI * 2);
-        ctx.fillStyle = hovered ? `${data.color}18` : `${data.color}0b`;
-        ctx.fill();
+        const inspected = state.selectedPlacedTower === tower;
+        if (inspected) {
+          ctx.beginPath();
+          ctx.arc(tower.x, tower.y, data.range, 0, Math.PI * 2);
+          ctx.fillStyle = `${data.color}13`;
+          ctx.fill();
+          ctx.strokeStyle = `${data.color}88`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
 
         ctx.save();
         ctx.translate(tower.x, tower.y);
         ctx.shadowColor = data.color;
-        ctx.shadowBlur = hovered ? 22 : 12;
+        ctx.shadowBlur = inspected ? 22 : 10;
         ctx.fillStyle = '#07111f';
         ctx.strokeStyle = data.color;
-        ctx.lineWidth = 4;
+        ctx.lineWidth = inspected ? 5 : 4;
         ctx.beginPath();
         for (let i = 0; i < 6; i++) {
           const angle = Math.PI / 6 + i * Math.PI / 3;
@@ -877,7 +931,7 @@
         ctx.stroke();
         ctx.fillStyle = data.color;
         ctx.beginPath();
-        ctx.arc(0, 0, 8, 0, Math.PI * 2);
+        ctx.arc(0, 0, inspected ? 10 : 8, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       });
@@ -945,6 +999,7 @@
 
     function draw() {
       drawStars();
+      drawWebTerrain();
       drawPath();
       drawPlacementPreview();
       drawTowers();
