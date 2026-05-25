@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.2.2 - Tower Menu and Web Terrain
+
+- Fixed menu hover and tab switching so the page no longer nudges around.
+- Core now starts at 100% instead of 25%.
+- Removed the yellow planet from the top right of the map.
+- Clicking a placed tower now opens a tower menu instead of selling instantly.
+- Added a manual Sell button in the tower menu. Towers still sell for half their placement cost.
+- Tower ranges now appear only while placing a tower or inspecting a placed tower.
+- Changed the buildable terrain into a silky space-web landscape for the future spider enemy theme.
+
 ## v0.2.1 - Control and Polish Pass
 
 - After placing a tower, the cursor now clears instead of holding another tower.
