@@ -16,8 +16,8 @@
       --accent: #4dd6ff;
       --gold: #ffd166;
       --danger: #ff5d73;
-      --good: #8aff9b;
       --violet: #b99cff;
+      --web: rgba(219, 232, 255, 0.18);
     }
 
     * { box-sizing: border-box; }
@@ -26,120 +26,42 @@
       margin: 0;
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at 12% 8%, rgba(77, 214, 255, 0.18), transparent 24%),
-        radial-gradient(circle at 82% 18%, rgba(185, 156, 255, 0.12), transparent 22%),
-        linear-gradient(180deg, #07111f 0%, var(--bg) 100%);
       color: var(--text);
       overflow-x: hidden;
       overflow-y: scroll;
+      background:
+        radial-gradient(circle at 14% 8%, rgba(77, 214, 255, 0.18), transparent 24%),
+        radial-gradient(circle at 84% 18%, rgba(185, 156, 255, 0.13), transparent 23%),
+        linear-gradient(180deg, #07111f 0%, var(--bg) 100%);
     }
 
-    .app {
-      width: min(1560px, calc(100vw - 24px));
-      margin: 0 auto;
-      padding: 16px 0 20px;
-    }
+    .app { width: min(1560px, calc(100vw - 24px)); margin: 0 auto; padding: 16px 0 20px; }
+    header { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 12px; }
+    h1 { margin: 0; font-size: clamp(32px, 4vw, 58px); line-height: 0.95; letter-spacing: 0; }
+    .subtitle { color: var(--muted); margin-top: 7px; font-size: 14px; }
+    .layout { display: grid; grid-template-columns: minmax(680px, 1fr) 330px; gap: 14px; align-items: start; }
 
-    header {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(32px, 4vw, 58px);
-      letter-spacing: 0;
-      line-height: 0.95;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      margin-top: 7px;
-      font-size: 14px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(680px, 1fr) 330px;
-      gap: 14px;
-      align-items: start;
-    }
-
-    .game-panel,
-    .side-panel,
-    .modal-content {
+    .game-panel, .side-panel, .modal-content {
       border: 1px solid var(--line);
       background: rgba(14, 24, 40, 0.93);
       box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
-    }
-
-    .game-panel {
       border-radius: 8px;
-      padding: 10px;
     }
 
-    .canvas-shell {
-      position: relative;
-      overflow: hidden;
-      border-radius: 7px;
-      border: 1px solid rgba(77, 214, 255, 0.2);
-    }
-
-    canvas {
-      width: 100%;
-      aspect-ratio: 5 / 3;
-      display: block;
-      background: #07111f;
-      cursor: default;
-    }
-
+    .game-panel { padding: 10px; }
+    .canvas-shell { overflow: hidden; border-radius: 7px; border: 1px solid rgba(77, 214, 255, 0.22); }
+    canvas { width: 100%; aspect-ratio: 5 / 3; display: block; background: #07111f; cursor: default; }
     canvas.building { cursor: crosshair; }
     canvas.inspecting { cursor: pointer; }
 
-    .mission-bar {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(110px, 1fr));
-      gap: 8px;
-      margin-bottom: 10px;
-    }
+    .mission-bar { display: grid; grid-template-columns: repeat(5, minmax(110px, 1fr)); gap: 8px; margin-bottom: 10px; }
+    .stat, .mini-stat { border: 1px solid var(--line); border-radius: 6px; background: linear-gradient(180deg, var(--panel-2), #101c2d); }
+    .stat { min-height: 58px; padding: 9px 10px; }
+    .stat b { display: block; font-size: 22px; margin-top: 5px; }
+    .label { color: var(--muted); font-size: 12px; text-transform: uppercase; }
 
-    .stat {
-      min-height: 58px;
-      padding: 9px 10px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: linear-gradient(180deg, var(--panel-2), #101c2d);
-    }
-
-    .stat b {
-      display: block;
-      font-size: 22px;
-      margin-top: 5px;
-    }
-
-    .label {
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-    }
-
-    .side-panel {
-      border-radius: 8px;
-      padding: 12px;
-      min-height: 650px;
-    }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-      margin-bottom: 10px;
-    }
-
+    .side-panel { padding: 12px; min-height: 650px; }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 10px; }
     button {
       border: 1px solid var(--line);
       background: #17304d;
@@ -150,7 +72,6 @@
       transition: border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
       font: inherit;
     }
-
     button:hover { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(77, 214, 255, 0.12) inset; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
     button.active { border-color: var(--accent); background: #214a70; }
@@ -158,16 +79,8 @@
 
     .panel-view { display: none; }
     .panel-view.active { display: block; }
-
-    .tower-list,
-    .enemy-list {
-      display: grid;
-      gap: 8px;
-      margin: 10px 0;
-    }
-
-    .tower-btn,
-    .enemy-card {
+    .tower-list, .enemy-list { display: grid; gap: 8px; margin: 10px 0; }
+    .tower-btn, .enemy-card {
       display: grid;
       grid-template-columns: 38px 1fr auto;
       gap: 10px;
@@ -178,112 +91,25 @@
       background: var(--panel-2);
       padding: 9px;
     }
-
-    .tower-btn.selected {
-      border-color: var(--accent);
-      background: #214669;
-    }
-
-    .icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: #06101c;
-      font-weight: 700;
-    }
-
+    .tower-btn.selected { border-color: var(--accent); background: #214669; }
+    .icon { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #06101c; font-weight: 700; }
     .laser { background: var(--accent); }
     .pulse { background: var(--gold); }
     .slow { background: var(--violet); }
-    .scout { background: #ff7b8f; }
-    .raider { background: #ffb86b; }
-    .bulwark { background: #91ffce; }
-
-    .small {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.35;
-    }
-
-    .info-card {
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: #091626;
-      padding: 11px;
-      min-height: 156px;
-      margin: 10px 0;
-    }
-
-    .info-card h3 {
-      margin: 0 0 8px;
-      font-size: 17px;
-    }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-      margin-top: 10px;
-    }
-
-    .mini-stat {
-      border: 1px solid rgba(48, 75, 112, 0.75);
-      border-radius: 5px;
-      padding: 8px;
-      background: rgba(21, 34, 56, 0.8);
-    }
-
-    .mini-stat b {
-      display: block;
-      margin-top: 5px;
-      font-size: 16px;
-      line-height: 1.1;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin: 10px 0;
-    }
-
+    .voidweaver { background: #9f62ff; }
+    .small { color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .info-card { border: 1px solid var(--line); border-radius: 6px; background: #091626; padding: 11px; min-height: 156px; margin: 10px 0; }
+    .info-card h3 { margin: 0 0 8px; font-size: 17px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 10px; }
+    .mini-stat { padding: 8px; background: rgba(21, 34, 56, 0.8); }
+    .mini-stat b { display: block; margin-top: 5px; font-size: 16px; line-height: 1.1; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
     .wide { grid-column: 1 / -1; }
+    .log { height: 142px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; padding: 10px; background: #081322; color: var(--muted); font-size: 13px; line-height: 1.35; }
 
-    .log {
-      height: 142px;
-      overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 10px;
-      background: #081322;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      background: rgba(2, 8, 15, 0.72);
-      z-index: 10;
-    }
-
+    .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(2, 8, 15, 0.72); z-index: 10; }
     .modal.open { display: flex; }
-
-    .modal-content {
-      width: min(760px, 100%);
-      max-height: min(760px, calc(100vh - 32px));
-      overflow: auto;
-      border-radius: 8px;
-      padding: 18px;
-    }
-
+    .modal-content { width: min(760px, 100%); max-height: min(760px, calc(100vh - 32px)); overflow: auto; padding: 18px; }
     .modal-content h2 { margin: 0 0 10px; }
     .modal-content p, .modal-content li { color: var(--muted); line-height: 1.45; }
 
@@ -292,12 +118,9 @@
       .mission-bar { grid-template-columns: repeat(2, 1fr); }
       header { align-items: flex-start; flex-direction: column; }
     }
-
     @media (max-width: 620px) {
       .app { width: min(100vw - 12px, 1560px); }
-      .mission-bar { grid-template-columns: 1fr; }
-      .actions { grid-template-columns: 1fr; }
-      .layout { gap: 10px; }
+      .mission-bar, .actions { grid-template-columns: 1fr; }
       canvas { min-height: 430px; }
     }
   </style>
@@ -307,7 +130,7 @@
     <header>
       <div>
         <h1>Universal Defense</h1>
-        <div class="subtitle">Mission prototype: build orbital towers, test enemy waves, protect the core.</div>
+        <div class="subtitle">Mission prototype: hold the space-web against the Voidweaver swarm.</div>
       </div>
       <button id="updatesBtn">Update Log</button>
     </header>
@@ -350,7 +173,7 @@
           <div class="enemy-list" id="enemyList"></div>
           <div class="info-card">
             <h3>Mission Notes</h3>
-            <div class="small">Enemy stats scale each wave. Later we can replace these shapes with your custom space spider images and add special powers.</div>
+            <div class="small">Only Voidweaver is active right now. Later, different spider species can unlock on later waves or different maps.</div>
           </div>
         </section>
 
@@ -363,28 +186,22 @@
   <div class="modal" id="updatesModal">
     <div class="modal-content">
       <h2>Update Log</h2>
+      <p><b>v0.2.3 - Voidweaver Arrives</b></p>
+      <ul>
+        <li>Removed all placeholder enemies from the game.</li>
+        <li>Added Voidweaver as the only active enemy type.</li>
+        <li>Voidweaver is now the basic first spider enemy: fast, light, and worth 12 cash.</li>
+        <li>Updated enemy waves so every spawn is currently Voidweaver.</li>
+        <li>Updated the enemy database to focus on spider class information.</li>
+      </ul>
       <p><b>v0.2.2 - Tower Menu and Web Terrain</b></p>
       <ul>
-        <li>Fixed menu hover and tab switching so the page no longer nudges around.</li>
-        <li>Core now starts at 100% instead of 25%.</li>
-        <li>Removed the yellow planet from the top right of the map.</li>
-        <li>Clicking a placed tower now opens a tower menu instead of selling instantly.</li>
-        <li>Added a manual Sell button in the tower menu. Towers still sell for half their placement cost.</li>
-        <li>Tower ranges now appear only while placing a tower or inspecting a placed tower.</li>
-        <li>Changed the buildable terrain into a silky space-web landscape for the future spider enemy theme.</li>
+        <li>Added tower inspection, manual sell, hidden ranges, 100% core health, and silky space-web terrain.</li>
       </ul>
       <p><b>v0.2.1 - Control and Polish Pass</b></p>
-      <ul>
-        <li>Added open cursor, auto wave, tower selling, clearer enemy labels, and improved visual effects.</li>
-      </ul>
+      <ul><li>Added open cursor, auto wave, clearer labels, and improved visual effects.</li></ul>
       <p><b>v0.2.0 - Mission Overhaul</b></p>
-      <ul>
-        <li>Expanded the battlefield, added the enemy database, tower stat cards, placement preview, and a longer mission path.</li>
-      </ul>
-      <p><b>v0.1.0 - First Launch</b></p>
-      <ul>
-        <li>Added the first playable prototype, three towers, waves, cash, core health, and an in-game update log.</li>
-      </ul>
+      <ul><li>Expanded the battlefield and added side panel tabs, stat cards, and a longer mission path.</li></ul>
       <button data-close>Close</button>
     </div>
   </div>
@@ -392,35 +209,18 @@
   <script>
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
+    const VOIDWEAVER_SRC = 'data:image/webp;base64,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';
+    const voidweaverImage = new Image();
+    voidweaverImage.src = VOIDWEAVER_SRC;
 
     const towerTypes = {
-      laser: {
-        name: 'Laser Node', cost: 70, range: 150, damage: 18, cooldown: 0.48,
-        color: '#4dd6ff', role: 'Reliable focus fire', note: 'Fast beam tower that picks off light ships.'
-      },
-      pulse: {
-        name: 'Pulse Cannon', cost: 125, range: 128, damage: 52, cooldown: 1.05,
-        color: '#ffd166', role: 'Heavy burst damage', note: 'Slow but powerful. Great against high HP targets.'
-      },
-      slow: {
-        name: 'Gravity Well', cost: 95, range: 138, damage: 6, cooldown: 0.38,
-        color: '#b99cff', role: 'Control and chip damage', note: 'Weak damage, but slows ships inside its range.', slow: 0.48
-      }
+      laser: { name: 'Laser Node', cost: 70, range: 150, damage: 18, cooldown: 0.48, color: '#4dd6ff', role: 'Reliable focus fire', note: 'Fast beam tower that picks off light spiders.' },
+      pulse: { name: 'Pulse Cannon', cost: 125, range: 128, damage: 52, cooldown: 1.05, color: '#ffd166', role: 'Heavy burst damage', note: 'Slow but powerful. Good when tougher spiders arrive later.' },
+      slow: { name: 'Gravity Well', cost: 95, range: 138, damage: 6, cooldown: 0.38, color: '#b99cff', role: 'Control and chip damage', note: 'Weak damage, but slows spiders inside its range.', slow: 0.48 }
     };
 
     const enemyTypes = {
-      scout: {
-        name: 'Void Scout', className: 'Scout', icon: 'S', baseHp: 42, speed: 82, cash: 10,
-        color: '#ff5d73', note: 'Fast and fragile. Tests if your path coverage has gaps.'
-      },
-      raider: {
-        name: 'Ion Raider', className: 'Raider', icon: 'R', baseHp: 86, speed: 58, cash: 18,
-        color: '#ffb86b', note: 'Balanced attacker with enough hull to punish weak defenses.'
-      },
-      bulwark: {
-        name: 'Bulwark Carrier', className: 'Bulwark', icon: 'B', baseHp: 190, speed: 34, cash: 35,
-        color: '#91ffce', note: 'Slow, tough ship. Pulse Cannons are built for these.'
-      }
+      voidweaver: { name: 'Voidweaver', className: 'Spider', icon: 'V', baseHp: 55, speed: 72, cash: 12, coreDamage: 6, color: '#9f62ff', note: 'Basic space spider. Faster than standard enemies and appears from wave 1.' }
     };
 
     const path = [
@@ -431,20 +231,10 @@
     ];
 
     const state = {
-      credits: 260,
-      core: 100,
-      wave: 0,
-      destroyed: 0,
-      selectedTower: null,
-      selectedPlacedTower: null,
-      hoverTower: null,
-      autoWave: false,
-      autoWaveDelay: 0,
-      mouse: { x: -1000, y: -1000, inside: false },
-      towers: [],
-      enemies: [],
-      shots: [],
-      log: ['Mission ready. Choose a tower to build, or click a placed tower to inspect it.']
+      credits: 260, core: 100, wave: 0, destroyed: 0,
+      selectedTower: null, selectedPlacedTower: null, autoWave: false, autoWaveDelay: 0,
+      mouse: { x: -1000, y: -1000, inside: false }, towers: [], enemies: [], shots: [],
+      log: ['Voidweaver detected. Build defenses and protect the core.']
     };
 
     let paused = false;
@@ -460,6 +250,8 @@
       document.getElementById('consoleLog').innerHTML = state.log.map(item => `<div>${item}</div>`).join('');
     }
 
+    function towerAt(x, y) { return state.towers.find(tower => Math.hypot(tower.x - x, tower.y - y) <= 28); }
+
     function updateHud() {
       document.getElementById('credits').textContent = state.credits;
       document.getElementById('core').textContent = `${Math.max(0, state.core)}%`;
@@ -472,51 +264,27 @@
       canvas.classList.toggle('inspecting', !state.selectedTower && state.mouse.inside && Boolean(towerAt(state.mouse.x, state.mouse.y)));
     }
 
-    function towerAt(x, y) {
-      return state.towers.find(tower => Math.hypot(tower.x - x, tower.y - y) <= 28);
-    }
-
-    function towerStatRows(tower) {
-      return `
-        <div class="stat-grid">
-          <div class="mini-stat"><span class="label">Damage</span><b>${tower.damage}</b></div>
-          <div class="mini-stat"><span class="label">Cooldown</span><b>${tower.cooldown.toFixed(2)}s</b></div>
-          <div class="mini-stat"><span class="label">Range</span><b>${tower.range}</b></div>
-          <div class="mini-stat"><span class="label">Cost</span><b>${tower.cost}</b></div>
-        </div>
-      `;
+    function statRows(item, isTower = true) {
+      const labels = isTower
+        ? [['Damage', item.damage], ['Cooldown', `${item.cooldown.toFixed(2)}s`], ['Range', item.range], ['Cost', item.cost]]
+        : [['Base HP', item.baseHp], ['Speed', item.speed], ['Cash', item.cash], ['Class', item.className]];
+      return `<div class="stat-grid">${labels.map(([label, value]) => `<div class="mini-stat"><span class="label">${label}</span><b>${value}</b></div>`).join('')}</div>`;
     }
 
     function setTowerInfo(key) {
       const info = document.getElementById('towerInfo');
       if (!key) {
-        info.innerHTML = `
-          <h3>Open Cursor</h3>
-          <div class="small">No tower is selected. Click a placed tower to inspect it, open its upgrade panel, or sell it manually.</div>
-        `;
+        info.innerHTML = '<h3>Open Cursor</h3><div class="small">No tower is selected. Click a placed tower to inspect it, see its range, or sell it manually.</div>';
         return;
       }
       const tower = towerTypes[key];
-      info.innerHTML = `
-        <h3>${tower.name}</h3>
-        <div class="small"><b>${tower.role}</b><br>${tower.note}</div>
-        ${towerStatRows(tower)}
-      `;
+      info.innerHTML = `<h3>${tower.name}</h3><div class="small"><b>${tower.role}</b><br>${tower.note}</div>${statRows(tower, true)}`;
     }
 
     function setPlacedTowerInfo(tower) {
       const data = towerTypes[tower.type];
       const refund = Math.floor(data.cost / 2);
-      const info = document.getElementById('towerInfo');
-      info.innerHTML = `
-        <h3>${data.name}</h3>
-        <div class="small"><b>Placed tower</b><br>Upgrade options will live here later. For now, this panel lets you inspect range and sell manually.</div>
-        ${towerStatRows(data)}
-        <div class="actions">
-          <button disabled>Upgrade Soon</button>
-          <button class="danger" id="sellTowerBtn">Sell: ${refund}</button>
-        </div>
-      `;
+      document.getElementById('towerInfo').innerHTML = `<h3>${data.name}</h3><div class="small"><b>Placed tower</b><br>Upgrade options will live here later. For now, inspect range or sell manually.</div>${statRows(data, true)}<div class="actions"><button disabled>Upgrade Soon</button><button class="danger" id="sellTowerBtn">Sell: ${refund}</button></div>`;
       document.getElementById('sellTowerBtn').addEventListener('click', () => sellTower(tower));
     }
 
@@ -535,50 +303,17 @@
       Object.entries(towerTypes).forEach(([key, tower]) => {
         const button = document.createElement('button');
         button.className = `tower-btn ${state.selectedTower === key ? 'selected' : ''}`;
-        button.innerHTML = `
-          <span class="icon ${key}">${tower.name[0]}</span>
-          <span><b>${tower.name}</b><br><span class="small">${tower.role}</span></span>
-          <b>${tower.cost}</b>
-        `;
-        button.addEventListener('mouseenter', () => {
-          state.hoverTower = key;
-          setTowerInfo(key);
-        });
-        button.addEventListener('mouseleave', () => {
-          state.hoverTower = null;
-          if (state.selectedPlacedTower) setPlacedTowerInfo(state.selectedPlacedTower);
-          else setTowerInfo(state.selectedTower);
-        });
-        button.addEventListener('click', () => {
-          state.selectedTower = key;
-          state.selectedPlacedTower = null;
-          setTowerInfo(key);
-          buildTowerButtons();
-          updateHud();
-        });
+        button.innerHTML = `<span class="icon ${key}">${tower.name[0]}</span><span><b>${tower.name}</b><br><span class="small">${tower.role}</span></span><b>${tower.cost}</b>`;
+        button.addEventListener('mouseenter', () => setTowerInfo(key));
+        button.addEventListener('mouseleave', () => state.selectedPlacedTower ? setPlacedTowerInfo(state.selectedPlacedTower) : setTowerInfo(state.selectedTower));
+        button.addEventListener('click', () => { state.selectedTower = key; state.selectedPlacedTower = null; setTowerInfo(key); buildTowerButtons(); updateHud(); });
         list.appendChild(button);
       });
     }
 
     function buildEnemyList() {
-      const list = document.getElementById('enemyList');
-      list.innerHTML = '';
-      Object.values(enemyTypes).forEach(enemy => {
-        const card = document.createElement('div');
-        card.className = 'enemy-card';
-        card.innerHTML = `
-          <span class="icon" style="background:${enemy.color}">${enemy.icon}</span>
-          <span><b>${enemy.name}</b><br><span class="small">${enemy.note}</span></span>
-          <span class="small">HP ${enemy.baseHp}</span>
-          <div class="wide stat-grid">
-            <div class="mini-stat"><span class="label">Base HP</span><b>${enemy.baseHp}</b></div>
-            <div class="mini-stat"><span class="label">Speed</span><b>${enemy.speed}</b></div>
-            <div class="mini-stat"><span class="label">Cash</span><b>${enemy.cash}</b></div>
-            <div class="mini-stat"><span class="label">Class</span><b>${enemy.className}</b></div>
-          </div>
-        `;
-        list.appendChild(card);
-      });
+      const enemy = enemyTypes.voidweaver;
+      document.getElementById('enemyList').innerHTML = `<div class="enemy-card"><span class="icon voidweaver">${enemy.icon}</span><span><b>${enemy.name}</b><br><span class="small">${enemy.note}</span></span><span class="small">HP ${enemy.baseHp}</span><div class="wide">${statRows(enemy, false)}</div></div>`;
     }
 
     function switchTab(tab) {
@@ -590,35 +325,14 @@
     }
 
     function restartMission() {
-      state.credits = 260;
-      state.core = 100;
-      state.wave = 0;
-      state.destroyed = 0;
-      state.selectedTower = null;
-      state.selectedPlacedTower = null;
-      state.autoWaveDelay = 0;
-      state.towers = [];
-      state.enemies = [];
-      state.shots = [];
-      spawnQueue = [];
-      waveActive = false;
-      paused = false;
+      Object.assign(state, { credits: 260, core: 100, wave: 0, destroyed: 0, selectedTower: null, selectedPlacedTower: null, autoWaveDelay: 0 });
+      state.towers = []; state.enemies = []; state.shots = []; spawnQueue = []; waveActive = false; paused = false;
       document.getElementById('pauseBtn').textContent = 'Pause';
-      buildTowerButtons();
-      setTowerInfo(null);
-      addLog('Mission restarted. Build a fresh defense grid.');
-      updateHud();
+      buildTowerButtons(); setTowerInfo(null); addLog('Mission restarted. Voidweaver swarm reset.'); updateHud();
     }
 
     function wavePattern(wave) {
-      const queue = [];
-      const scouts = 8 + wave * 3;
-      const raiders = Math.max(0, Math.floor((wave - 1) * 1.8));
-      const bulwarks = Math.max(0, Math.floor((wave - 3) / 2));
-      for (let i = 0; i < scouts; i++) queue.push('scout');
-      for (let i = 0; i < raiders; i++) queue.push('raider');
-      for (let i = 0; i < bulwarks; i++) queue.push('bulwark');
-      return queue.sort(() => Math.random() - 0.5);
+      return Array.from({ length: 9 + wave * 4 }, () => 'voidweaver');
     }
 
     function startWave() {
@@ -628,43 +342,28 @@
       spawnTimer = 0;
       waveActive = true;
       state.autoWaveDelay = 0;
-      addLog(`Wave ${state.wave} launched. Enemy contacts: ${spawnQueue.length}.`);
+      addLog(`Wave ${state.wave}: ${spawnQueue.length} Voidweavers inbound.`);
       updateHud();
     }
 
     function spawnEnemy(typeKey) {
       const data = enemyTypes[typeKey];
-      const hp = Math.round(data.baseHp * (1 + state.wave * 0.18));
-      state.enemies.push({
-        type: typeKey,
-        x: path[0].x,
-        y: path[0].y,
-        segment: 0,
-        hp,
-        maxHp: hp,
-        speed: data.speed + state.wave * 1.6,
-        cash: data.cash + Math.floor(state.wave * 1.8),
-        slowUntil: 0
-      });
+      const hp = Math.round(data.baseHp * (1 + state.wave * 0.16));
+      state.enemies.push({ type: typeKey, x: path[0].x, y: path[0].y, segment: 0, hp, maxHp: hp, speed: data.speed + state.wave * 1.8, cash: data.cash + Math.floor(state.wave * 1.5), slowUntil: 0 });
     }
 
     function isNearPath(x, y) {
       for (let i = 0; i < path.length - 1; i++) {
-        const a = path[i];
-        const b = path[i + 1];
+        const a = path[i], b = path[i + 1];
         const lengthSquared = (b.x - a.x) ** 2 + (b.y - a.y) ** 2;
         const t = Math.max(0, Math.min(1, ((x - a.x) * (b.x - a.x) + (y - a.y) * (b.y - a.y)) / lengthSquared));
-        const px = a.x + t * (b.x - a.x);
-        const py = a.y + t * (b.y - a.y);
-        if (Math.hypot(x - px, y - py) < 50) return true;
+        if (Math.hypot(x - (a.x + t * (b.x - a.x)), y - (a.y + t * (b.y - a.y))) < 50) return true;
       }
       return false;
     }
 
     function canPlaceTower(x, y) {
-      if (x < 28 || y < 28 || x > canvas.width - 28 || y > canvas.height - 28) return false;
-      if (isNearPath(x, y)) return false;
-      return !state.towers.some(existing => Math.hypot(existing.x - x, existing.y - y) < 46);
+      return x >= 28 && y >= 28 && x <= canvas.width - 28 && y <= canvas.height - 28 && !isNearPath(x, y) && !state.towers.some(tower => Math.hypot(tower.x - x, tower.y - y) < 46);
     }
 
     function sellTower(tower) {
@@ -688,26 +387,15 @@
 
       if (!state.selectedTower) {
         state.selectedPlacedTower = existingTower || null;
-        if (existingTower) setPlacedTowerInfo(existingTower);
-        else setTowerInfo(null);
+        existingTower ? setPlacedTowerInfo(existingTower) : setTowerInfo(null);
         updateHud();
         return;
       }
 
       const tower = towerTypes[state.selectedTower];
-      if (existingTower) {
-        addLog('That spot already has a tower. Open the cursor to inspect it.');
-        return;
-      }
-      if (state.credits < tower.cost) {
-        addLog(`Need ${tower.cost} cash for ${tower.name}.`);
-        return;
-      }
-      if (!canPlaceTower(x, y)) {
-        addLog('Placement blocked. Keep towers away from the path and other towers.');
-        return;
-      }
-
+      if (existingTower) return addLog('That spot already has a tower. Open the cursor to inspect it.');
+      if (state.credits < tower.cost) return addLog(`Need ${tower.cost} cash for ${tower.name}.`);
+      if (!canPlaceTower(x, y)) return addLog('Placement blocked. Keep towers away from the path and other towers.');
       state.credits -= tower.cost;
       state.towers.push({ type: state.selectedTower, x, y, cooldown: 0, level: 1 });
       addLog(`${tower.name} deployed.`);
@@ -728,7 +416,7 @@
         spawnTimer -= delta;
         if (spawnTimer <= 0) {
           spawnEnemy(spawnQueue.shift());
-          spawnTimer = Math.max(330, 760 - state.wave * 20);
+          spawnTimer = Math.max(260, 650 - state.wave * 16);
         }
       }
 
@@ -739,24 +427,16 @@
         const angle = Math.atan2(target.y - enemy.y, target.x - enemy.x);
         enemy.x += Math.cos(angle) * speed * delta / 1000;
         enemy.y += Math.sin(angle) * speed * delta / 1000;
-        if (Math.hypot(target.x - enemy.x, target.y - enemy.y) < 5) {
-          enemy.segment += 1;
-          enemy.x = target.x;
-          enemy.y = target.y;
-        }
+        if (Math.hypot(target.x - enemy.x, target.y - enemy.y) < 5) { enemy.segment += 1; enemy.x = target.x; enemy.y = target.y; }
       });
 
       for (let i = state.enemies.length - 1; i >= 0; i--) {
         const enemy = state.enemies[i];
         if (enemy.segment >= path.length - 1) {
           state.enemies.splice(i, 1);
-          state.core -= enemy.type === 'bulwark' ? 14 : enemy.type === 'raider' ? 9 : 6;
-          addLog(`${enemyTypes[enemy.type].name} hit the core.`);
-          if (state.core <= 0) {
-            addLog(`Core lost on wave ${state.wave}. Restarting mission.`);
-            restartMission();
-            return;
-          }
+          state.core -= enemyTypes[enemy.type].coreDamage;
+          addLog(`${enemyTypes[enemy.type].name} breached the core.`);
+          if (state.core <= 0) { addLog(`Core lost on wave ${state.wave}. Restarting mission.`); restartMission(); return; }
         }
       }
 
@@ -774,11 +454,7 @@
 
       for (let i = state.enemies.length - 1; i >= 0; i--) {
         const enemy = state.enemies[i];
-        if (enemy.hp <= 0) {
-          state.credits += enemy.cash;
-          state.destroyed += 1;
-          state.enemies.splice(i, 1);
-        }
+        if (enemy.hp <= 0) { state.credits += enemy.cash; state.destroyed += 1; state.enemies.splice(i, 1); }
       }
 
       state.shots.forEach(shot => shot.life -= delta);
@@ -794,272 +470,109 @@
       }
 
       hudTimer += delta;
-      if (hudTimer > 220) {
-        updateHud();
-        hudTimer = 0;
-      }
+      if (hudTimer > 220) { updateHud(); hudTimer = 0; }
     }
 
     function drawStars() {
       const nebula = ctx.createRadialGradient(230, 135, 20, 230, 135, 420);
-      nebula.addColorStop(0, 'rgba(77, 214, 255, 0.17)');
-      nebula.addColorStop(0.45, 'rgba(185, 156, 255, 0.08)');
-      nebula.addColorStop(1, 'rgba(5, 9, 20, 0)');
-      ctx.fillStyle = '#07111f';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = nebula;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+      nebula.addColorStop(0, 'rgba(77,214,255,0.17)');
+      nebula.addColorStop(0.45, 'rgba(185,156,255,0.09)');
+      nebula.addColorStop(1, 'rgba(5,9,20,0)');
+      ctx.fillStyle = '#07111f'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = nebula; ctx.fillRect(0, 0, canvas.width, canvas.height);
       for (let i = 0; i < 150; i++) {
-        const x = (i * 137 + 47) % canvas.width;
-        const y = (i * 71 + 29) % canvas.height;
-        const size = i % 9 === 0 ? 2 : 1;
+        const x = (i * 137 + 47) % canvas.width, y = (i * 71 + 29) % canvas.height;
         ctx.fillStyle = i % 7 === 0 ? 'rgba(77,214,255,0.68)' : 'rgba(255,255,255,0.58)';
-        ctx.fillRect(x, y, size, size);
+        ctx.fillRect(x, y, i % 9 === 0 ? 2 : 1, i % 9 === 0 ? 2 : 1);
       }
     }
 
     function drawWebTerrain() {
       const anchors = [
-        { x: 56, y: 72 }, { x: 256, y: 38 }, { x: 520, y: 78 }, { x: 768, y: 44 }, { x: 1108, y: 92 },
-        { x: 88, y: 620 }, { x: 282, y: 518 }, { x: 512, y: 654 }, { x: 745, y: 548 }, { x: 1135, y: 650 },
-        { x: 258, y: 250 }, { x: 510, y: 338 }, { x: 735, y: 318 }, { x: 968, y: 464 }
+        [56,72], [256,38], [520,78], [768,44], [1108,92], [88,620], [282,518], [512,654], [745,548], [1135,650], [258,250], [510,338], [735,318], [968,464]
       ];
-
-      ctx.save();
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = 'rgba(190, 230, 255, 0.11)';
-      ctx.lineWidth = 1.2;
+      ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = varColor('--web'); ctx.lineWidth = 1.2;
       for (let i = 0; i < anchors.length; i++) {
         for (let j = i + 1; j < anchors.length; j++) {
-          const a = anchors[i];
-          const b = anchors[j];
-          const distance = Math.hypot(a.x - b.x, a.y - b.y);
-          if (distance < 315) {
-            ctx.globalAlpha = Math.max(0.08, 0.34 - distance / 900);
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            const midX = (a.x + b.x) / 2 + Math.sin(i * 1.7 + j) * 18;
-            const midY = (a.y + b.y) / 2 + Math.cos(i + j * 1.3) * 14;
-            ctx.quadraticCurveTo(midX, midY, b.x, b.y);
-            ctx.stroke();
-          }
+          const [ax, ay] = anchors[i], [bx, by] = anchors[j], d = Math.hypot(ax - bx, ay - by);
+          if (d < 315) { ctx.globalAlpha = Math.max(0.08, 0.34 - d / 900); ctx.beginPath(); ctx.moveTo(ax, ay); ctx.quadraticCurveTo((ax + bx) / 2 + Math.sin(i * 1.7 + j) * 18, (ay + by) / 2 + Math.cos(i + j * 1.3) * 14, bx, by); ctx.stroke(); }
         }
       }
-
-      ctx.globalAlpha = 1;
-      anchors.forEach((point, index) => {
-        const pulse = index % 3 === 0 ? 4 : 2.5;
-        ctx.fillStyle = 'rgba(221, 247, 255, 0.34)';
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, pulse, 0, Math.PI * 2);
-        ctx.fill();
-      });
+      ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(221,247,255,0.34)';
+      anchors.forEach(([x, y], i) => { ctx.beginPath(); ctx.arc(x, y, i % 3 === 0 ? 4 : 2.5, 0, Math.PI * 2); ctx.fill(); });
       ctx.restore();
     }
 
+    function varColor(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
     function drawPath() {
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.shadowColor = 'rgba(77, 214, 255, 0.22)';
-      ctx.shadowBlur = 14;
-      ctx.strokeStyle = '#1d334f';
-      ctx.lineWidth = 70;
-      ctx.beginPath();
-      path.forEach((point, index) => index ? ctx.lineTo(point.x, point.y) : ctx.moveTo(point.x, point.y));
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-      ctx.strokeStyle = '#426b93';
-      ctx.lineWidth = 14;
-      ctx.stroke();
-      ctx.setLineDash([18, 22]);
-      ctx.strokeStyle = 'rgba(77,214,255,0.42)';
-      ctx.lineWidth = 3;
-      ctx.stroke();
-      ctx.setLineDash([]);
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.shadowColor = 'rgba(77,214,255,0.22)'; ctx.shadowBlur = 14;
+      ctx.strokeStyle = '#1d334f'; ctx.lineWidth = 70; ctx.beginPath(); path.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke();
+      ctx.shadowBlur = 0; ctx.strokeStyle = '#426b93'; ctx.lineWidth = 14; ctx.stroke(); ctx.setLineDash([18, 22]); ctx.strokeStyle = 'rgba(77,214,255,0.42)'; ctx.lineWidth = 3; ctx.stroke(); ctx.setLineDash([]);
     }
 
     function drawPlacementPreview() {
       if (!state.selectedTower || !state.mouse.inside) return;
       const tower = towerTypes[state.selectedTower];
       const valid = canPlaceTower(state.mouse.x, state.mouse.y) && state.credits >= tower.cost;
-      ctx.beginPath();
-      ctx.arc(state.mouse.x, state.mouse.y, tower.range, 0, Math.PI * 2);
-      ctx.fillStyle = valid ? `${tower.color}18` : 'rgba(255, 93, 115, 0.13)';
-      ctx.fill();
-      ctx.strokeStyle = valid ? `${tower.color}88` : 'rgba(255, 93, 115, 0.85)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(state.mouse.x, state.mouse.y, 19, 0, Math.PI * 2);
-      ctx.fillStyle = valid ? tower.color : '#ff5d73';
-      ctx.globalAlpha = 0.8;
-      ctx.fill();
-      ctx.globalAlpha = 1;
+      ctx.beginPath(); ctx.arc(state.mouse.x, state.mouse.y, tower.range, 0, Math.PI * 2); ctx.fillStyle = valid ? `${tower.color}18` : 'rgba(255,93,115,0.13)'; ctx.fill(); ctx.strokeStyle = valid ? `${tower.color}88` : 'rgba(255,93,115,0.85)'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(state.mouse.x, state.mouse.y, 19, 0, Math.PI * 2); ctx.fillStyle = valid ? tower.color : '#ff5d73'; ctx.globalAlpha = 0.8; ctx.fill(); ctx.globalAlpha = 1;
     }
 
     function drawTowers() {
       state.towers.forEach(tower => {
         const data = towerTypes[tower.type];
         const inspected = state.selectedPlacedTower === tower;
-        if (inspected) {
-          ctx.beginPath();
-          ctx.arc(tower.x, tower.y, data.range, 0, Math.PI * 2);
-          ctx.fillStyle = `${data.color}13`;
-          ctx.fill();
-          ctx.strokeStyle = `${data.color}88`;
-          ctx.lineWidth = 2;
-          ctx.stroke();
-        }
-
-        ctx.save();
-        ctx.translate(tower.x, tower.y);
-        ctx.shadowColor = data.color;
-        ctx.shadowBlur = inspected ? 22 : 10;
-        ctx.fillStyle = '#07111f';
-        ctx.strokeStyle = data.color;
-        ctx.lineWidth = inspected ? 5 : 4;
-        ctx.beginPath();
-        for (let i = 0; i < 6; i++) {
-          const angle = Math.PI / 6 + i * Math.PI / 3;
-          const x = Math.cos(angle) * 24;
-          const y = Math.sin(angle) * 24;
-          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-        }
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = data.color;
-        ctx.beginPath();
-        ctx.arc(0, 0, inspected ? 10 : 8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+        if (inspected) { ctx.beginPath(); ctx.arc(tower.x, tower.y, data.range, 0, Math.PI * 2); ctx.fillStyle = `${data.color}13`; ctx.fill(); ctx.strokeStyle = `${data.color}88`; ctx.lineWidth = 2; ctx.stroke(); }
+        ctx.save(); ctx.translate(tower.x, tower.y); ctx.shadowColor = data.color; ctx.shadowBlur = inspected ? 22 : 10; ctx.fillStyle = '#07111f'; ctx.strokeStyle = data.color; ctx.lineWidth = inspected ? 5 : 4;
+        ctx.beginPath(); for (let i = 0; i < 6; i++) { const a = Math.PI / 6 + i * Math.PI / 3; const x = Math.cos(a) * 24, y = Math.sin(a) * 24; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = data.color; ctx.beginPath(); ctx.arc(0, 0, inspected ? 10 : 8, 0, Math.PI * 2); ctx.fill(); ctx.restore();
       });
     }
 
     function drawEnemies() {
       state.enemies.forEach(enemy => {
-        const data = enemyTypes[enemy.type];
-        const angle = enemy.segment < path.length - 1
-          ? Math.atan2(path[enemy.segment + 1].y - enemy.y, path[enemy.segment + 1].x - enemy.x)
-          : 0;
-        const size = enemy.type === 'bulwark' ? 24 : enemy.type === 'raider' ? 19 : 15;
-
-        ctx.save();
-        ctx.translate(enemy.x, enemy.y);
-        ctx.rotate(angle);
-        ctx.fillStyle = 'rgba(77, 214, 255, 0.25)';
-        ctx.beginPath();
-        ctx.ellipse(-size * 1.05, 0, size * 0.9, size * 0.28, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = data.color;
-        ctx.shadowColor = data.color;
-        ctx.shadowBlur = 10;
-        ctx.beginPath();
-        ctx.moveTo(size, 0);
-        ctx.lineTo(-size * 0.75, -size * 0.62);
-        ctx.lineTo(-size * 0.42, 0);
-        ctx.lineTo(-size * 0.75, size * 0.62);
-        ctx.closePath();
-        ctx.fill();
+        const target = path[Math.min(enemy.segment + 1, path.length - 1)];
+        const angle = Math.atan2(target.y - enemy.y, target.x - enemy.x);
+        ctx.save(); ctx.translate(enemy.x, enemy.y); ctx.rotate(angle + Math.PI / 2); ctx.shadowColor = '#9f62ff'; ctx.shadowBlur = 14;
+        if (voidweaverImage.complete) ctx.drawImage(voidweaverImage, -34, -27, 68, 53);
+        else { ctx.fillStyle = '#9f62ff'; ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.fill(); }
         ctx.restore();
-
-        ctx.fillStyle = '#1e0c15';
-        ctx.fillRect(enemy.x - 22, enemy.y - 30, 44, 6);
-        ctx.fillStyle = '#8aff9b';
-        ctx.fillRect(enemy.x - 22, enemy.y - 30, 44 * Math.max(0, enemy.hp / enemy.maxHp), 6);
+        ctx.fillStyle = '#1e0c15'; ctx.fillRect(enemy.x - 23, enemy.y - 32, 46, 6); ctx.fillStyle = '#8aff9b'; ctx.fillRect(enemy.x - 23, enemy.y - 32, 46 * Math.max(0, enemy.hp / enemy.maxHp), 6);
       });
     }
 
     function drawShots() {
-      state.shots.forEach(shot => {
-        ctx.strokeStyle = shot.color;
-        ctx.globalAlpha = Math.max(0, shot.life / 120);
-        ctx.lineWidth = 4;
-        ctx.shadowColor = shot.color;
-        ctx.shadowBlur = 12;
-        ctx.beginPath();
-        ctx.moveTo(shot.x1, shot.y1);
-        ctx.lineTo(shot.x2, shot.y2);
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-        ctx.globalAlpha = 1;
-      });
+      state.shots.forEach(shot => { ctx.strokeStyle = shot.color; ctx.globalAlpha = Math.max(0, shot.life / 120); ctx.lineWidth = 4; ctx.shadowColor = shot.color; ctx.shadowBlur = 12; ctx.beginPath(); ctx.moveTo(shot.x1, shot.y1); ctx.lineTo(shot.x2, shot.y2); ctx.stroke(); ctx.shadowBlur = 0; ctx.globalAlpha = 1; });
     }
 
     function drawOverlay() {
       if (!paused) return;
-      ctx.fillStyle = 'rgba(0,0,0,0.42)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#ecf6ff';
-      ctx.font = 'bold 42px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+      ctx.fillStyle = 'rgba(0,0,0,0.42)'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#ecf6ff'; ctx.font = 'bold 42px Arial'; ctx.textAlign = 'center'; ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
     }
 
-    function draw() {
-      drawStars();
-      drawWebTerrain();
-      drawPath();
-      drawPlacementPreview();
-      drawTowers();
-      drawEnemies();
-      drawShots();
-      drawOverlay();
-    }
-
-    function loop(time) {
-      const delta = Math.min(40, time - lastTime);
-      lastTime = time;
-      update(delta);
-      draw();
-      requestAnimationFrame(loop);
-    }
-
+    function draw() { drawStars(); drawWebTerrain(); drawPath(); drawPlacementPreview(); drawTowers(); drawEnemies(); drawShots(); drawOverlay(); }
+    function loop(time) { const delta = Math.min(40, time - lastTime); lastTime = time; update(delta); draw(); requestAnimationFrame(loop); }
     function openModal(id) { document.getElementById(id).classList.add('open'); }
     function closeModals() { document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('open')); }
-
-    function updateMouse(event) {
-      const rect = canvas.getBoundingClientRect();
-      state.mouse.x = (event.clientX - rect.left) * (canvas.width / rect.width);
-      state.mouse.y = (event.clientY - rect.top) * (canvas.height / rect.height);
-      state.mouse.inside = true;
-      updateHud();
-    }
+    function updateMouse(event) { const rect = canvas.getBoundingClientRect(); state.mouse.x = (event.clientX - rect.left) * (canvas.width / rect.width); state.mouse.y = (event.clientY - rect.top) * (canvas.height / rect.height); state.mouse.inside = true; updateHud(); }
 
     document.getElementById('startWave').addEventListener('click', startWave);
-    document.getElementById('autoWaveBtn').addEventListener('click', () => {
-      state.autoWave = !state.autoWave;
-      state.autoWaveDelay = state.autoWave ? 700 : 0;
-      addLog(state.autoWave ? 'Auto Wave enabled.' : 'Auto Wave disabled.');
-      updateHud();
-    });
-    document.getElementById('pauseBtn').addEventListener('click', () => {
-      paused = !paused;
-      document.getElementById('pauseBtn').textContent = paused ? 'Resume' : 'Pause';
-    });
+    document.getElementById('autoWaveBtn').addEventListener('click', () => { state.autoWave = !state.autoWave; state.autoWaveDelay = state.autoWave ? 700 : 0; addLog(state.autoWave ? 'Auto Wave enabled.' : 'Auto Wave disabled.'); updateHud(); });
+    document.getElementById('pauseBtn').addEventListener('click', () => { paused = !paused; document.getElementById('pauseBtn').textContent = paused ? 'Resume' : 'Pause'; });
     document.getElementById('clearBtn').addEventListener('click', () => clearCursor(true));
     document.getElementById('resetBtn').addEventListener('click', restartMission);
     document.getElementById('updatesBtn').addEventListener('click', () => openModal('updatesModal'));
     document.getElementById('towersTab').addEventListener('click', () => switchTab('towers'));
     document.getElementById('enemiesTab').addEventListener('click', () => switchTab('enemies'));
     document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', closeModals));
-    document.querySelectorAll('.modal').forEach(modal => modal.addEventListener('click', event => {
-      if (event.target === modal) closeModals();
-    }));
+    document.querySelectorAll('.modal').forEach(modal => modal.addEventListener('click', event => { if (event.target === modal) closeModals(); }));
     canvas.addEventListener('click', handleCanvasClick);
     canvas.addEventListener('mousemove', updateMouse);
     canvas.addEventListener('mouseenter', updateMouse);
-    canvas.addEventListener('mouseleave', () => {
-      state.mouse.inside = false;
-      updateHud();
-    });
+    canvas.addEventListener('mouseleave', () => { state.mouse.inside = false; updateHud(); });
 
-    buildTowerButtons();
-    buildEnemyList();
-    setTowerInfo(null);
-    updateHud();
-    requestAnimationFrame(loop);
+    buildTowerButtons(); buildEnemyList(); setTowerInfo(null); updateHud(); requestAnimationFrame(loop);
   </script>
 </body>
 </html>
