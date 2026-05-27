@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.4 - Visibility Fix
+
+- Fixed invisible towers, shots, and enemies by switching critical combat rendering to reliable canvas shapes.
+- Removed the corrupted embedded Voidweaver image data that was breaking enemy rendering.
+- Voidweaver now renders as a visible purple mechanical spider stand-in until final sprite handling is stable.
+- Stopped tower menu hover from changing the info panel content, preventing the page from nudging.
+
 ## v0.2.3 - Voidweaver Arrives
 
 - Removed all placeholder enemies from the game.
