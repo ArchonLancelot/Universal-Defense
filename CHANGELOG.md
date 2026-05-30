@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.0 - Magic Cat
+
+- Added Magic Cat as a new tower with a reliable canvas-drawn black-magic cat design.
+- Added three Bloons-style upgrade paths: Shadow Damage, Curse, and Summoning.
+- Added 15 upgrade tiers with cash costs, tier locking, stronger attacks, splash damage, curses, slows, damage over time, familiar hits, and abyss pulses.
+- Added visible purple spell bolts, paw strike effects, curse bursts, and area pulse effects.
+- Cleaned tower descriptions so they refer to enemies and targets instead of only spiders.
+
 ## v0.2.4 - Visibility Fix
 
 - Fixed invisible towers, shots, and enemies by switching critical combat rendering to reliable canvas shapes.
