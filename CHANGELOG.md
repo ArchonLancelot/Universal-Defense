@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.1 - Magic Cat Balance
+
+- Retested the Magic Cat paths and reduced Shadow Damage's stacked advantage.
+- Shadow Damage remains the strongest raw damage path, but is no longer stronger than Curse and Summoning combined.
+- Summoning now has better companion uptime, stronger later-tier familiar hits, and a faster abyss pulse.
+- Curse now correctly uses its tuned damage-over-time value instead of a fixed hidden number.
+- Updated in-game notes and upgrade text to better show each path's role.
+
 ## v0.3.0 - Magic Cat
 
 - Added Magic Cat as a new tower with a reliable canvas-drawn black-magic cat design.
