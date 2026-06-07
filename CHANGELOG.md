@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.2 - Cosmic Spinner
+
+- Added Cosmic Spinner as a new blue mechanical spider enemy.
+- Cosmic Spinner begins spawning on wave 5 mixed into the same waves as Voidweavers.
+- Cosmic Spinner has more HP, moves a bit slower, rewards more cash, and deals more core damage than Voidweaver.
+- Added Cosmic Spinner to the enemy database and updated wave logs to show mixed enemy rosters.
+- Added a reliable canvas-drawn Cosmic Spinner so the enemy remains visible even before final sprite asset handling.
+
 ## v0.3.1 - Magic Cat Balance
 
 - Retested the Magic Cat paths and reduced Shadow Damage's stacked advantage.
