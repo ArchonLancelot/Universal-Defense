@@ -1,12 +1,5 @@
 # Changelog
 
-## v0.4.0 - 3D Mission View
-
-- Replaced the 2D canvas battlefield presentation with a Three.js WebGL scene.
-- Added a tilted tactical camera, starfield, illuminated route lanes, low-poly tower models, and 3D spider units.
-- Preserved the existing mission logic, tower placement controls, waves, combat, and HUD.
-- Kept the game deployable as a static GitHub Pages site by loading Three.js from a CDN.
-
 ## v0.3.2 - Cosmic Spinner
 
 - Added Cosmic Spinner as a new blue mechanical spider enemy.
